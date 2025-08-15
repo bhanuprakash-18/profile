@@ -1,0 +1,202 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "title": "Mask R-CNN Implementation",
+      "description": "Implemented the Mask R-CNN architecture from scratch using TensorFlow and Keras for object detection and instance segmentation tasks. Preprocessed datasets like COCO and custom images, generated region proposals using RPNs (Region Proposal Networks), and applied RoIAlign for precise mask predictions.",
+      "technologies": [
+        "TensorFlow",
+        "Keras",
+        "Python",
+        "Computer Vision",
+        "Deep Learning",
+        "COCO Dataset",
+        "RPN",
+        "RoIAlign"
+      ],
+      "image": "./assets/images/project-1.jpg",
+      "liveUrl": null,
+      "githubUrl": "https://github.com/bhanuprakash-18/mask-rcnn-implementation",
+      "featured": true,
+      "status": "completed",
+      "startDate": "2024-03-01",
+      "endDate": "2024-05-15",
+      "highlights": [
+        "Built complete Mask R-CNN architecture from scratch",
+        "Achieved precise instance segmentation on COCO dataset",
+        "Implemented RPN and RoIAlign for improved accuracy",
+        "Evaluated performance using mAP metrics and hyperparameter tuning"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "COVID-19 Spread Simulation",
+      "description": "Built a comprehensive simulation model to forecast the spread of COVID-19 across multiple countries using Markov Chains in Python. Collected real-world data from public health sources and applied probabilistic transition matrices to estimate daily infection progression.",
+      "technologies": [
+        "Python",
+        "Markov Chains",
+        "Matplotlib",
+        "Seaborn",
+        "Pandas",
+        "NumPy",
+        "Public Health Data",
+        "Statistical Modeling"
+      ],
+      "image": "./assets/images/project-2.jpg",
+      "liveUrl": null,
+      "githubUrl": "https://github.com/bhanuprakash-18/covid19-simulation",
+      "featured": true,
+      "status": "completed",
+      "startDate": "2022-08-01",
+      "endDate": "2022-11-30",
+      "highlights": [
+        "Developed probabilistic models using Markov Chains",
+        "Analyzed infection dynamics across multiple countries",
+        "Visualized peak infection periods and country-wise impact",
+        "Enabled scenario analysis for intervention strategies"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "5G Network Anomaly Detection System",
+      "description": "Developed machine learning models for fault and alarm detection in 5G network operations during my tenure at TCS. Conducted comprehensive EDA and time-series analysis on large-scale telecommunications KPI and alarm datasets to enhance network reliability.",
+      "technologies": [
+        "Python",
+        "Machine Learning",
+        "Time Series Analysis",
+        "Anomaly Detection",
+        "Plotly",
+        "Kibana",
+        "Power BI",
+        "Telecommunications"
+      ],
+      "image": "./assets/images/project-3.jpg",
+      "liveUrl": null,
+      "githubUrl": null,
+      "featured": true,
+      "status": "completed",
+      "startDate": "2023-06-01",
+      "endDate": "2024-09-30",
+      "highlights": [
+        "Reduced network downtime through ML-powered fault detection",
+        "Built real-time KPI monitoring dashboards",
+        "Analyzed large-scale telecommunications datasets",
+        "Implemented classification models for alarm prediction"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "AI-Powered Customer Care Chatbot",
+      "description": "Created an intelligent chatbot for internal query handling and troubleshooting using the RASA framework during my work at TCS. The chatbot improved response times and automated common support queries for telecommunications operations.",
+      "technologies": [
+        "RASA Framework",
+        "Python",
+        "Natural Language Processing",
+        "Chatbot Development",
+        "Machine Learning",
+        "NLU",
+        "Dialogue Management"
+      ],
+      "image": "./assets/images/project-4.jpg",
+      "liveUrl": null,
+      "githubUrl": null,
+      "featured": false,
+      "status": "completed",
+      "startDate": "2023-12-01",
+      "endDate": "2024-04-30",
+      "highlights": [
+        "Implemented intelligent query understanding using NLP",
+        "Automated troubleshooting for common network issues",
+        "Reduced manual support workload significantly",
+        "Integrated with existing telecommunications systems"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Healthcare Customer-Care Optimization",
+      "description": "Engineered a Flask-based web application with integrated RESTful APIs to optimize the customer-care representative matching algorithm at Welfinity Healthcare. Performed comprehensive data cleaning, preprocessing, and transformation on large-scale customer and service datasets.",
+      "technologies": [
+        "Flask",
+        "Python",
+        "RESTful APIs",
+        "Data Analytics",
+        "Pandas",
+        "Algorithm Optimization",
+        "Healthcare Data",
+        "Web Development"
+      ],
+      "image": "./assets/images/project-5.jpg",
+      "liveUrl": null,
+      "githubUrl": "https://github.com/bhanuprakash-18/healthcare-optimization",
+      "featured": false,
+      "status": "completed",
+      "startDate": "2022-09-01",
+      "endDate": "2022-10-31",
+      "highlights": [
+        "Optimized customer-care representative matching by 40%",
+        "Built comprehensive data processing pipeline",
+        "Developed RESTful APIs for seamless integration",
+        "Authored detailed technical documentation"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "AWS DeepRacer Autonomous Racing",
+      "description": "Achieved Top 3 finalist position in AWS DeepRacer global competition by training advanced reinforcement learning models. Designed custom reward functions, fine-tuned hyperparameters, and evaluated model performance in virtual simulation tracks using AWS SageMaker.",
+      "technologies": [
+        "AWS SageMaker",
+        "Reinforcement Learning",
+        "AWS DeepRacer",
+        "Python",
+        "Neural Networks",
+        "Hyperparameter Tuning",
+        "Simulation",
+        "Autonomous Systems"
+      ],
+      "image": "./assets/images/project-6.jpg",
+      "liveUrl": null,
+      "githubUrl": "https://github.com/bhanuprakash-18/aws-deepracer-models",
+      "featured": false,
+      "status": "completed",
+      "startDate": "2022-03-01",
+      "endDate": "2022-12-15",
+      "highlights": [
+        "Secured Top 3 position in global AWS competition",
+        "Designed innovative reward functions for racing optimization",
+        "Applied advanced RL techniques for autonomous navigation",
+        "Gained expertise in continuous model improvement"
+      ]
+    }
+  ],
+  "metadata": {
+    "totalProjects": 6,
+    "featuredCount": 3,
+    "lastUpdated": "2025-08-15T10:30:00Z",
+    "version": "2.0.0",
+    "categories": [
+      "Machine Learning",
+      "Deep Learning",
+      "Computer Vision",
+      "Data Analytics",
+      "AI Applications",
+      "Healthcare Technology",
+      "Telecommunications",
+      "Reinforcement Learning"
+    ],
+    "technologies": [
+      "Python",
+      "TensorFlow",
+      "Keras",
+      "PyTorch",
+      "Scikit-Learn",
+      "Pandas",
+      "NumPy",
+      "Flask",
+      "RASA",
+      "AWS SageMaker",
+      "Plotly",
+      "Power BI",
+      "Kibana"
+    ]
+  }
+}

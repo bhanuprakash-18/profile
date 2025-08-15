@@ -1,33 +1,19 @@
-# Personal Portfolio Website
+# Bhanu Prakash Reddy Chennampalli - Portfolio Website
 
-A modern, responsive personal portfolio website built with HTML5, CSS3, and vanilla JavaScript. Optimized for GitHub Pages deployment with a clean dark theme, smooth animations, and accessibility features.
+A modern, responsive personal portfolio website showcasing my expertise in Data Science, Machine Learning, and AI. Built with HTML5, CSS3, and vanilla JavaScript, optimized for GitHub Pages deployment with a clean dark theme, smooth animations, and accessibility features.
 
-## 🌟 Features
+## 🌟 About Me
 
-### Design & User Experience
-- **Modern Dark Theme** - Elegant dark color scheme with subtle gradients
-- **Fully Responsive** - Optimized for mobile, tablet, and desktop devices
-- **Smooth Animations** - CSS transitions and JavaScript-powered scroll animations
-- **Accessible Design** - WCAG compliant with proper semantic HTML and ARIA labels
-- **Fast Loading** - Optimized performance with lazy loading and efficient code
+I'm a Data Scientist and Machine Learning Engineer currently pursuing my Master's in Information Systems & Management at the University of Bremen, Germany. With professional experience at Tata Consultancy Services (TCS) and expertise in AI-powered solutions, I specialize in:
 
-### Sections
-- **Hero Section** - Professional introduction with call-to-action buttons
-- **About Section** - Education, work experience, and technical skills
-- **Projects Section** - Dynamic project showcase loaded from JSON
-- **Contact Section** - Contact information and functional contact form
-- **Sticky Navigation** - Fixed header with smooth scrolling navigation
-
-### Technical Features
-- **Dynamic Content Loading** - Projects loaded from JSON file
-- **Mobile-First Design** - Responsive grid layouts and flexible components
-- **SEO Optimized** - Meta tags, structured data, and social media previews
-- **Cross-Browser Compatible** - Works on all modern browsers
-- **GitHub Pages Ready** - No build process required
+- **Machine Learning & Deep Learning** - Building intelligent models for real-world applications
+- **Computer Vision** - Implementing advanced image processing and object detection systems
+- **Data Analytics** - Extracting insights from complex telecommunications and healthcare datasets
+- **AI Solutions** - Developing chatbots, anomaly detection systems, and optimization algorithms
 
 ## 🚀 Live Demo
 
-Visit the live website: [https://yourusername.github.io/my-portfolio](https://yourusername.github.io/my-portfolio)
+Visit my portfolio: [https://bhanuprakash-18.github.io/portfolio](https://bhanuprakash-18.github.io/portfolio)
 
 ## 📁 Project Structure
 
@@ -290,16 +276,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Icons** - Custom SVG icons and Font Awesome references
 - **Testing** - Various devices and browser testing
 
-## 📞 Support
+## 📞 Contact
 
-If you have any questions or need help customizing the portfolio:
+For collaboration opportunities, questions, or just to connect:
 
-- **Email**: your-email@example.com
-- **GitHub Issues**: [Create an issue](https://github.com/yourusername/my-portfolio/issues)
-- **LinkedIn**: [Your LinkedIn Profile](https://linkedin.com/in/yourprofile)
+- **Email**: bhanupr1@uni-bremen.de | cbhanuprakash18@gmail.com
+- **LinkedIn**: [Bhanu Prakash Reddy Chennampalli](https://www.linkedin.com/in/chennampallibhanuprakashreddy/)
+- **GitHub**: [bhanuprakash-18](https://github.com/bhanuprakash-18)
+- **Kaggle**: [bhanuprakash18](https://www.kaggle.com/bhanuprakash18)
+- **LeetCode**: [cbhanuprakash18](https://leetcode.com/u/cbhanuprakash18/)
+- **Twitter (X)**: [@bhanuprakash18_](https://x.com/bhanuprakash18_)
+- **Instagram**: [@bhanuprakash_18](https://www.instagram.com/bhanuprakash_18)
+- **Location**: Bremen, Germany
 
 ---
 
-**Made with ❤️ by [Your Name](https://github.com/yourusername)**
+**Made with ❤️ by [Bhanu Prakash Reddy Chennampalli](https://github.com/bhanuprakash-18)**
 
-Last updated: December 2024
+Last updated: August 2025
