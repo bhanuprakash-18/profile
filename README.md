@@ -80,6 +80,11 @@ my-portfolio/
    - Enable GitHub Pages in repository settings
    - Your site will be available at `https://yourusername.github.io/repository-name`
 
+5. **Setup Contact Form**
+   - Follow the instructions in `CONTACT_FORM_SETUP.md`
+   - Create a free Formspree account to receive contact form submissions
+   - Update the form action URL with your Formspree endpoint
+
 ### Advanced Setup
 
 #### Custom Domain (Optional)
@@ -123,6 +128,26 @@ Update the following sections in `index.html`:
    <a href="https://linkedin.com/in/yourprofile">linkedin.com/in/yourprofile</a>
    <a href="https://github.com/yourusername">github.com/yourusername</a>
    ```
+
+### Contact Form Setup
+The portfolio includes a fully functional contact form powered by [Formspree](https://formspree.io/). To set it up:
+
+1. **Create a Formspree account** at [formspree.io](https://formspree.io/)
+2. **Create a new form** and get your endpoint URL
+3. **Update the form action** in `index.html` (line ~430):
+   ```html
+   <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+   ```
+4. **Test the form** after deployment
+
+For detailed setup instructions, see `CONTACT_FORM_SETUP.md`
+
+**Features included:**
+- Real-time form validation
+- Spam protection (honeypot + reCAPTCHA)
+- Success/error message handling
+- Mobile-responsive design
+- Accessibility support
 
 ### Adding Projects
 Edit `data/projects.json` to add your projects:

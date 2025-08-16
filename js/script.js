@@ -16,15 +16,20 @@ const CONFIG = {
 // ==============================================
 // DOM Elements
 // ==============================================
-const elements = {
-    navbar: document.getElementById('navbar'),
-    navMenu: document.getElementById('nav-menu'),
-    hamburger: document.getElementById('hamburger'),
-    navLinks: document.querySelectorAll('.nav-link'),
-    projectsGrid: document.getElementById('projects-grid'),
-    contactForm: document.getElementById('contact-form'),
-    sectionsToAnimate: document.querySelectorAll('.fade-in')
-};
+let elements = {};
+
+// Initialize DOM elements after DOM is loaded
+function initializeElements() {
+    elements = {
+        navbar: document.getElementById('navbar'),
+        navMenu: document.getElementById('nav-menu'),
+        hamburger: document.getElementById('hamburger'),
+        navLinks: document.querySelectorAll('.nav-link'),
+        projectsGrid: document.getElementById('projects-grid'),
+        contactForm: document.getElementById('contact-form'),
+        sectionsToAnimate: document.querySelectorAll('.fade-in')
+    };
+}
 
 // ==============================================
 // Utility Functions
@@ -258,15 +263,21 @@ function addEntranceAnimations() {
  * Load and display projects from JSON file
  */
 async function loadProjects() {
+    console.log('Loading projects...');
+    console.log('Projects grid element:', elements.projectsGrid);
+    
     try {
         showProjectsLoading();
         
         const response = await fetch(CONFIG.projectsDataPath);
+        console.log('Fetch response:', response);
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
+        console.log('Projects data:', data);
         
         if (data.projects && Array.isArray(data.projects)) {
             displayProjects(data.projects);
@@ -285,7 +296,11 @@ async function loadProjects() {
  * @param {Array} projects - Array of project objects
  */
 function displayProjects(projects) {
-    if (!elements.projectsGrid) return;
+    console.log('Displaying projects:', projects.length);
+    if (!elements.projectsGrid) {
+        console.error('Projects grid element not found!');
+        return;
+    }
     
     elements.projectsGrid.innerHTML = '';
     
@@ -302,6 +317,8 @@ function displayProjects(projects) {
             card.classList.add('visible');
         }, index * 150);
     });
+    
+    console.log('Projects displayed successfully!');
 }
 
 /**
@@ -358,7 +375,11 @@ function createProjectCard(project, index) {
  * Show loading state for projects
  */
 function showProjectsLoading() {
-    if (!elements.projectsGrid) return;
+    console.log('Showing projects loading state...');
+    if (!elements.projectsGrid) {
+        console.error('Projects grid element not found!');
+        return;
+    }
     
     elements.projectsGrid.innerHTML = `
         <div class="projects-loading">
@@ -372,7 +393,11 @@ function showProjectsLoading() {
  * Show error state for projects
  */
 function showProjectsError() {
-    if (!elements.projectsGrid) return;
+    console.log('Showing projects error state...');
+    if (!elements.projectsGrid) {
+        console.error('Projects grid element not found!');
+        return;
+    }
     
     elements.projectsGrid.innerHTML = `
         <div class="projects-error">
@@ -406,10 +431,11 @@ function initializeContactForm() {
  * Handle contact form submission
  * @param {Event} event - Form submit event
  */
-function handleContactFormSubmit(event) {
+async function handleContactFormSubmit(event) {
     event.preventDefault();
     
-    const formData = new FormData(event.target);
+    const form = event.target;
+    const formData = new FormData(form);
     const formValues = Object.fromEntries(formData.entries());
     
     // Validate form
@@ -420,12 +446,48 @@ function handleContactFormSubmit(event) {
     // Show loading state
     showFormLoading(true);
     
-    // Simulate form submission (replace with actual submission logic)
-    setTimeout(() => {
+    try {
+        // Submit to Formspree
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            showFormSuccess();
+            form.reset();
+            
+            // Announce success to screen readers
+            if (window.announceToScreenReader) {
+                window.announceToScreenReader('Message sent successfully');
+            }
+        } else {
+            const data = await response.json();
+            if (data.errors) {
+                // Handle validation errors from Formspree
+                data.errors.forEach(error => {
+                    if (error.field) {
+                        showFieldError(error.field, error.message);
+                    }
+                });
+            } else {
+                throw new Error('Failed to send message');
+            }
+        }
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        showFormError('There was an error sending your message. Please try again or contact me directly via email.');
+        
+        // Announce error to screen readers
+        if (window.announceToScreenReader) {
+            window.announceToScreenReader('Error sending message. Please try again.');
+        }
+    } finally {
         showFormLoading(false);
-        showFormSuccess();
-        event.target.reset();
-    }, 2000);
+    }
 }
 
 /**
@@ -545,6 +607,11 @@ function showFormLoading(isLoading) {
  */
 function showFormSuccess() {
     const formContainer = elements.contactForm.parentElement;
+    
+    // Remove any existing messages
+    const existingMessages = formContainer.querySelectorAll('.form-success, .form-error');
+    existingMessages.forEach(msg => msg.remove());
+    
     const successMessage = document.createElement('div');
     successMessage.className = 'form-success';
     successMessage.innerHTML = `
@@ -555,10 +622,38 @@ function showFormSuccess() {
     
     formContainer.appendChild(successMessage);
     
-    // Remove success message after 5 seconds
+    // Remove success message after 8 seconds
     setTimeout(() => {
         successMessage.remove();
-    }, 5000);
+    }, 8000);
+}
+
+/**
+ * Show form error message
+ * @param {string} message - Error message to display
+ */
+function showFormError(message) {
+    const formContainer = elements.contactForm.parentElement;
+    
+    // Remove any existing messages
+    const existingMessages = formContainer.querySelectorAll('.form-success, .form-error');
+    existingMessages.forEach(msg => msg.remove());
+    
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'form-error';
+    errorMessage.innerHTML = `
+        <div class="error-icon">⚠</div>
+        <h3>Message Not Sent</h3>
+        <p>${message}</p>
+        <p>You can also reach me directly at: <a href="mailto:bhanupr1@uni-bremen.de" class="contact-link">bhanupr1@uni-bremen.de</a></p>
+    `;
+    
+    formContainer.appendChild(errorMessage);
+    
+    // Remove error message after 10 seconds
+    setTimeout(() => {
+        errorMessage.remove();
+    }, 10000);
 }
 
 /**
@@ -791,6 +886,9 @@ function initializeWebsite() {
     console.log('Initializing portfolio website...');
     
     try {
+        // Initialize DOM elements first
+        initializeElements();
+        
         // Core functionality
         initializeNavigation();
         initializeScrollAnimations();
