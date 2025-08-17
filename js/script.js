@@ -10,7 +10,8 @@ const CONFIG = {
     animationDuration: 300,
     scrollOffset: 80,
     debounceDelay: 100,
-    projectsDataPath: './data/projects.json'
+    projectsDataPath: './data/projects.json',
+    blogsDataPath: './data/blogs.json'
 };
 
 // ==============================================
@@ -26,6 +27,7 @@ function initializeElements() {
         hamburger: document.getElementById('hamburger'),
         navLinks: document.querySelectorAll('.nav-link'),
         projectsGrid: document.getElementById('projects-grid'),
+        blogsGrid: document.getElementById('blogs-grid'),
         contactForm: document.getElementById('contact-form'),
         sectionsToAnimate: document.querySelectorAll('.fade-in')
     };
@@ -1006,6 +1008,7 @@ function initializeWebsite() {
         
         // Load dynamic content
         loadProjects();
+        loadBlogs();
         
         // Initialize enhanced button effects
         setTimeout(() => {
@@ -1216,23 +1219,372 @@ function contractProjectsView() {
     }
 }
 
-// Make functions available globally
-window.toggleProjectsView = toggleProjectsView;
-window.expandProjectsView = expandProjectsView;
-window.contractProjectsView = contractProjectsView;
-
 // ==============================================
-// Export functions for external use
+// Blog Functions
 // ==============================================
 
-// Make key functions available globally for debugging or external scripts
-window.portfolioAPI = {
-    smoothScrollTo,
-    loadProjects,
-    toggleMobileMenu,
-    updateActiveNavLink,
-    navigateToProjectDetail
-};
+/**
+ * Load blogs from JSON file
+ */
+async function loadBlogs() {
+    try {
+        console.log('Loading blogs...');
+        showBlogsLoading();
+        
+        const response = await fetch(CONFIG.blogsDataPath);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const blogs = await response.json();
+        console.log('Blogs loaded successfully:', blogs.length, 'blogs found');
+        
+        // Store all blogs globally for potential future use
+        window.allBlogs = blogs;
+        
+        displayBlogs(blogs);
+        
+    } catch (error) {
+        console.error('Error loading blogs:', error);
+        showBlogError();
+    }
+}
+
+/**
+ * Display blogs in the grid
+ * @param {Array} blogs - Array of blog objects
+ */
+function displayBlogs(blogs) {
+    if (!elements.blogsGrid) {
+        console.warn('Blogs grid element not found');
+        return;
+    }
+
+    // Clear any existing content
+    elements.blogsGrid.innerHTML = '';
+    
+    if (!blogs || blogs.length === 0) {
+        elements.blogsGrid.innerHTML = `
+            <div class="no-blogs-message">
+                <h3>No blogs available</h3>
+                <p>Check back later for new blog posts!</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Show only top 3 featured or latest blogs on home page
+    const initialBlogs = blogs.slice(0, 3);
+    
+    initialBlogs.forEach((blog, index) => {
+        console.log('Creating card for blog:', blog.title);
+        const blogCard = createBlogCard(blog, index);
+        elements.blogsGrid.appendChild(blogCard);
+    });
+    
+    // Add "View More Blogs" button if there are more than 3 blogs
+    if (blogs.length > 3) {
+        const viewMoreContainer = document.createElement('div');
+        viewMoreContainer.className = 'view-more-container';
+        viewMoreContainer.innerHTML = `
+            <button class="btn-view-more-projects" onclick="toggleBlogsView()">
+                View More Blogs (${blogs.length - 3} more)
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6"/>
+                </svg>
+            </button>
+        `;
+        elements.blogsGrid.appendChild(viewMoreContainer);
+    }
+    
+    // Add animation class to new cards with staggered effect
+    const newCards = elements.blogsGrid.querySelectorAll('.blog-card');
+    console.log('Created blog cards:', newCards.length);
+    newCards.forEach((card, index) => {
+        card.classList.add('fade-in');
+        // Staggered animation with a more dynamic delay
+        setTimeout(() => {
+            card.classList.add('visible');
+            // Add a subtle entrance effect
+            card.style.animation = `cardSlideIn 0.6s ease-out ${index * 0.1}s both`;
+        }, index * 100);
+    });
+    
+    console.log('Blogs displayed successfully!');
+}
+
+/**
+ * Create a blog card element
+ * @param {Object} blog - Blog data object
+ * @param {number} index - Blog index for animation delay
+ * @returns {HTMLElement} Blog card element
+ */
+function createBlogCard(blog, index) {
+    const card = document.createElement('div');
+    card.className = 'blog-card';
+    card.style.animationDelay = `${index * 150}ms`;
+    
+    // Create short description (first 150 characters)
+    const shortDescription = blog.shortDescription.length > 150 
+        ? blog.shortDescription.substring(0, 150) + '...' 
+        : blog.shortDescription;
+    
+    // Show only first 4 keywords
+    const displayKeywords = blog.keywords.slice(0, 4);
+    const hasMoreKeywords = blog.keywords.length > 4;
+    
+    // Format date
+    const publishDate = new Date(blog.publishDate).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+    
+    card.innerHTML = `
+        <div class="blog-card-image">
+            <img src="${blog.image || './assets/images/blog-placeholder.jpg'}" 
+                 alt="${blog.title}" 
+                 loading="lazy"
+                 onerror="this.src='./assets/images/blog-placeholder.jpg'">
+        </div>
+        <div class="blog-card-content">
+            <div class="blog-card-meta">
+                <span class="blog-card-category">${blog.category}</span>
+                <span class="blog-card-date">${publishDate}</span>
+                <span class="blog-card-read-time">${blog.readTime}</span>
+            </div>
+            <h3 class="blog-card-title">${blog.title}</h3>
+            <p class="blog-card-description">${shortDescription}</p>
+            <div class="blog-keywords">
+                ${displayKeywords.map(keyword => `<span class="keyword-tag">${keyword}</span>`).join('')}
+                ${hasMoreKeywords ? `<span class="keyword-tag more-keywords">+${blog.keywords.length - 4} more</span>` : ''}
+            </div>
+            <div class="blog-card-actions">
+                <button class="btn-read-blog" data-blog-id="${blog.id}" aria-label="Read blog: ${blog.title}">
+                    Read More
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Add click event listener to the button
+    const readBlogBtn = card.querySelector('.btn-read-blog');
+    readBlogBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Add loading state
+        readBlogBtn.classList.add('loading');
+        readBlogBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 11-6.219-8.56"/>
+            </svg>
+            Loading...
+        `;
+        
+        // Add a slight delay for better UX
+        setTimeout(() => {
+            navigateToBlogDetail(blog.id);
+        }, 300);
+    });
+    
+    // Add hover effect for the entire card
+    card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-8px)';
+    });
+    
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0)';
+    });
+    
+    return card;
+}
+
+/**
+ * Navigate to blog detail page
+ * @param {string} blogId - Blog ID
+ */
+function navigateToBlogDetail(blogId) {
+    // Store the blog ID in sessionStorage for the detail page
+    sessionStorage.setItem('selectedBlogId', blogId);
+    // Navigate to blog detail page
+    window.location.href = `blog-detail.html?id=${blogId}`;
+}
+
+/**
+ * Show loading state for blogs
+ */
+function showBlogsLoading() {
+    console.log('Showing blogs loading state...');
+    if (elements.blogsGrid) {
+        elements.blogsGrid.innerHTML = `
+            <div class="loading-state">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <p>Loading latest blogs...</p>
+            </div>
+        `;
+    }
+}
+
+/**
+ * Show error state for blogs
+ */
+function showBlogError() {
+    console.log('Showing blog error state...');
+    if (elements.blogsGrid) {
+        elements.blogsGrid.innerHTML = `
+            <div class="error-state">
+                <h3>Unable to load blogs</h3>
+                <p>Please check your connection and try again.</p>
+                <button onclick="loadBlogs()" class="retry-btn">
+                    Try Again
+                </button>
+            </div>
+        `;
+    }
+}
+
+/**
+ * Toggle between showing 3 blogs and all blogs
+ */
+function toggleBlogsView() {
+    const viewMoreBtn = document.querySelector('.btn-view-more-projects');
+    const currentCards = elements.blogsGrid.querySelectorAll('.blog-card');
+    const isExpanded = currentCards.length > 3;
+    
+    if (isExpanded) {
+        // Contract: Show only first 3 blogs
+        contractBlogsView();
+    } else {
+        // Expand: Show all blogs
+        expandBlogsView();
+    }
+}
+
+/**
+ * Expand to show all blogs
+ */
+function expandBlogsView() {
+    if (!window.allBlogs) return;
+    
+    const viewMoreBtn = document.querySelector('.btn-view-more-projects');
+    const viewMoreContainer = document.querySelector('.view-more-container');
+    
+    // Add loading state to button
+    viewMoreBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 11-6.219-8.56"/>
+        </svg>
+        Loading...
+    `;
+    viewMoreBtn.disabled = true;
+    
+    setTimeout(() => {
+        // Remove the view more container temporarily
+        if (viewMoreContainer) {
+            viewMoreContainer.remove();
+        }
+        
+        // Add remaining blogs (starting from index 3)
+        const remainingBlogs = window.allBlogs.slice(3);
+        remainingBlogs.forEach((blog, index) => {
+            const blogCard = createBlogCard(blog, index + 3);
+            blogCard.style.opacity = '0';
+            blogCard.style.transform = 'translateY(30px)';
+            elements.blogsGrid.appendChild(blogCard);
+            
+            // Animate in the new cards
+            setTimeout(() => {
+                blogCard.style.transition = 'all 0.6s ease-out';
+                blogCard.style.opacity = '1';
+                blogCard.style.transform = 'translateY(0)';
+                blogCard.classList.add('visible');
+            }, index * 100);
+        });
+        
+        // Add "Show Less" button
+        setTimeout(() => {
+            const showLessContainer = document.createElement('div');
+            showLessContainer.className = 'view-more-container';
+            showLessContainer.innerHTML = `
+                <button class="btn-view-more-projects" onclick="toggleBlogsView()">
+                    Show Less Blogs
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m18 15-6-6-6 6"/>
+                    </svg>
+                </button>
+            `;
+            elements.blogsGrid.appendChild(showLessContainer);
+            
+            // Re-initialize enhanced buttons for new button
+            setTimeout(() => {
+                initializeEnhancedButtons();
+            }, 100);
+        }, remainingBlogs.length * 100 + 200);
+        
+    }, 500);
+}
+
+/**
+ * Contract to show only first 3 blogs
+ */
+function contractBlogsView() {
+    if (!window.allBlogs) return;
+    
+    const allCards = elements.blogsGrid.querySelectorAll('.blog-card');
+    const viewMoreContainer = document.querySelector('.view-more-container');
+    
+    // Animate out cards beyond the first 3
+    const cardsToRemove = Array.from(allCards).slice(3);
+    
+    cardsToRemove.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.transition = 'all 0.4s ease-in';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                card.remove();
+            }, 400);
+        }, index * 50);
+    });
+    
+    // Remove current button
+    if (viewMoreContainer) {
+        setTimeout(() => {
+            viewMoreContainer.remove();
+            
+            // Add "View More Blogs" button back
+            const newViewMoreContainer = document.createElement('div');
+            newViewMoreContainer.className = 'view-more-container';
+            newViewMoreContainer.innerHTML = `
+                <button class="btn-view-more-projects" onclick="toggleBlogsView()">
+                    View More Blogs (${window.allBlogs.length - 3} more)
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </button>
+            `;
+            elements.blogsGrid.appendChild(newViewMoreContainer);
+            
+            // Re-initialize enhanced buttons for new button
+            setTimeout(() => {
+                initializeEnhancedButtons();
+            }, 100);
+        }, cardsToRemove.length * 50 + 200);
+    }
+}
+
+// Make blog functions available globally
+window.toggleBlogsView = toggleBlogsView;
+window.expandBlogsView = expandBlogsView;
+window.contractBlogsView = contractBlogsView;
+window.navigateToBlogDetail = navigateToBlogDetail;
 
 /**
  * Enhanced Button Interactions
