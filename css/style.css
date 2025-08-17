@@ -568,11 +568,36 @@ a:hover {
     transition: all var(--transition-normal);
     border: 1px solid var(--color-border);
     position: relative;
+    transform: translateY(20px);
+    opacity: 0;
+}
+
+.project-card.visible {
+    transform: translateY(0);
+    opacity: 1;
 }
 
 .project-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-xl);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary);
+}
+
+.project-card:hover .project-image img {
+    transform: scale(1.05);
+}
+
+.project-card:hover .btn-view-details {
+    animation: buttonGlow 1s ease-in-out;
+}
+
+@keyframes buttonGlow {
+    0%, 100% { 
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+    50% { 
+        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+    }
 }
 
 .project-image {
@@ -589,7 +614,8 @@ a:hover {
     transition: transform var(--transition-slow);
 }
 
-.project-card:hover .project-image img {
+.project-card:hover .project-image img,
+.project-card:focus .project-image img {
     transform: scale(1.1);
 }
 
@@ -623,6 +649,198 @@ a:hover {
     font-size: var(--font-size-xs);
     font-weight: 500;
     border: 1px solid var(--color-primary);
+}
+
+.tech-tag.more-tech {
+    background: var(--color-secondary);
+    color: white;
+    border-color: var(--color-secondary);
+    font-weight: 600;
+}
+
+.project-actions {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    justify-content: center;
+}
+
+.btn-view-details {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light), var(--color-secondary));
+    background-size: 200% 200%;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.btn-view-details::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease-out;
+    z-index: 1;
+}
+
+.btn-view-details::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease-out, height 0.6s ease-out;
+    z-index: 1;
+}
+
+.btn-view-details:hover {
+    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary), var(--color-secondary));
+    background-position: 100% 100%;
+    transform: translateY(-8px) rotateX(15deg) scale(1.05);
+    box-shadow: 
+        0 20px 40px rgba(99, 102, 241, 0.4),
+        0 0 60px rgba(99, 102, 241, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+    animation: magneticPull 0.4s ease-out;
+}
+
+@keyframes magneticPull {
+    0% { transform: translateY(-8px) rotateX(15deg) scale(1.05); }
+    50% { transform: translateY(-12px) rotateX(20deg) scale(1.08); }
+    100% { transform: translateY(-8px) rotateX(15deg) scale(1.05); }
+}
+
+.btn-view-details:hover::before {
+    left: 100%;
+}
+
+.btn-view-details:hover::after {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-view-details:focus {
+    outline: 2px solid var(--color-primary-light);
+    outline-offset: 2px;
+}
+
+.btn-view-details:active {
+    transform: translateY(-4px) rotateX(10deg) scale(0.98);
+    box-shadow: 
+        0 8px 20px rgba(99, 102, 241, 0.5),
+        0 0 30px rgba(99, 102, 241, 0.4);
+    transition: all 0.1s ease-out;
+}
+
+.btn-view-details svg {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    position: relative;
+    z-index: 2;
+}
+
+.btn-view-details:hover svg {
+    transform: translateX(6px) rotateZ(360deg) scale(1.2);
+    animation: iconDance 0.8s ease-in-out;
+}
+
+@keyframes iconDance {
+    0%, 100% { transform: translateX(6px) rotateZ(360deg) scale(1.2); }
+    25% { transform: translateX(8px) rotateZ(405deg) scale(1.3); }
+    50% { transform: translateX(10px) rotateZ(450deg) scale(1.4); }
+    75% { transform: translateX(8px) rotateZ(495deg) scale(1.3); }
+}
+
+@keyframes arrowBounce {
+    0%, 100% { transform: translateX(4px) scale(1.1); }
+    50% { transform: translateX(8px) scale(1.2); }
+}
+
+/* Enhanced pulse animation with particle effect */
+.btn-view-details {
+    animation: 
+        enhancedPulse 4s ease-in-out infinite,
+        particleFloat 6s ease-in-out infinite;
+}
+
+@keyframes enhancedPulse {
+    0%, 100% { 
+        box-shadow: 
+            0 8px 32px rgba(99, 102, 241, 0.25),
+            0 0 0 1px rgba(255, 255, 255, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    50% { 
+        box-shadow: 
+            0 12px 40px rgba(99, 102, 241, 0.4),
+            0 0 60px rgba(99, 102, 241, 0.2),
+            0 0 0 1px rgba(255, 255, 255, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+}
+
+@keyframes particleFloat {
+    0%, 100% { 
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg);
+    }
+    25% { 
+        background-position: 100% 50%;
+        filter: hue-rotate(10deg);
+    }
+    50% { 
+        background-position: 100% 100%;
+        filter: hue-rotate(20deg);
+    }
+    75% { 
+        background-position: 0% 100%;
+        filter: hue-rotate(10deg);
+    }
+}
+
+/* Loading state animation */
+.btn-view-details.loading {
+    pointer-events: none;
+    background: linear-gradient(135deg, #94a3b8, #cbd5e1);
+    animation: loadingShimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingShimmer {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.btn-view-details.loading svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .project-links {
@@ -1248,6 +1466,70 @@ a:hover {
 }
 
 /* ==============================================
+   Enhanced Animations
+   ============================================== */
+/* Enhanced Project Card Animations */
+@keyframes cardSlideIn {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+        filter: blur(5px);
+    }
+    60% {
+        transform: translateY(-5px);
+        opacity: 0.8;
+        filter: blur(2px);
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+/* Tech tag hover animations */
+.tech-tag {
+    transition: all var(--transition-normal);
+}
+
+.tech-tag:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.2);
+}
+
+.tech-tag.more-tech:hover {
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+
+/* Project actions section animations */
+.project-actions {
+    opacity: 0.9;
+    transition: opacity var(--transition-normal);
+}
+
+.project-card:hover .project-actions {
+    opacity: 1;
+}
+
+/* Responsive button animations */
+@media (max-width: 768px) {
+    .btn-view-details {
+        padding: var(--spacing-sm) var(--spacing-lg);
+        font-size: var(--font-size-xs);
+    }
+    
+    .btn-view-details:hover {
+        transform: translateY(-2px);
+    }
+    
+    @keyframes arrowBounce {
+        0%, 100% { transform: translateX(2px) scale(1.05); }
+        50% { transform: translateX(4px) scale(1.1); }
+    }
+}
+
+/* ==============================================
    Responsive Design
    ============================================== */
 @media (max-width: 768px) {
@@ -1783,3 +2065,387 @@ a:hover {
     font-weight: 600;
 }
 */
+
+/* ==============================================
+   View More Projects Button - Enhanced Styling
+   ============================================== */
+
+.view-more-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: var(--spacing-3xl) auto var(--spacing-2xl) auto;
+    text-align: center;
+    width: 100%;
+    position: relative;
+}
+
+.btn-view-more-projects {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-3xl);
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.9), 
+        rgba(129, 140, 248, 0.8), 
+        rgba(236, 72, 153, 0.9));
+    background-size: 400% 400%;
+    color: white;
+    border: none;
+    border-radius: 60px;
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 15px 35px rgba(99, 102, 241, 0.3),
+        0 5px 15px rgba(0, 0, 0, 0.1),
+        0 0 0 2px rgba(255, 255, 255, 0.05),
+        inset 0 2px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    animation: 
+        morphingGlow 8s ease-in-out infinite,
+        floatingDance 6s ease-in-out infinite;
+}
+
+
+
+.btn-view-more-projects::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.1) 30%,
+        transparent 70%
+    );
+    opacity: 0;
+    transition: all 0.6s ease-out;
+    transform: rotate(45deg);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.btn-view-more-projects::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+    );
+    transition: left 0.8s ease-out;
+    z-index: 2;
+}
+
+.btn-view-more-projects:hover {
+    background: linear-gradient(135deg, 
+        rgba(79, 70, 229, 1), 
+        rgba(99, 102, 241, 1), 
+        rgba(196, 64, 221, 1));
+    background-position: 100% 100%;
+    transform: translateY(-12px) rotateX(20deg) scale(1.08);
+    box-shadow: 
+        0 25px 50px rgba(99, 102, 241, 0.5),
+        0 10px 30px rgba(236, 72, 153, 0.3),
+        0 0 80px rgba(99, 102, 241, 0.4),
+        0 0 0 3px rgba(255, 255, 255, 0.1),
+        inset 0 3px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+    animation: 
+        magneticAttraction 0.6s ease-out,
+        morphingGlow 8s ease-in-out infinite,
+        floatingDance 6s ease-in-out infinite;
+    letter-spacing: 0.05em;
+}
+
+.btn-view-more-projects:hover::before {
+    opacity: 1;
+    transform: rotate(45deg) scale(1.2);
+}
+
+.btn-view-more-projects:hover::after {
+    left: 100%;
+}
+
+.btn-view-more-projects:active {
+    transform: translateY(-8px) rotateX(15deg) scale(1.02);
+    box-shadow: 
+        0 15px 30px rgba(99, 102, 241, 0.6),
+        0 5px 15px rgba(236, 72, 153, 0.4),
+        0 0 40px rgba(99, 102, 241, 0.5);
+    transition: all 0.1s ease-out;
+}
+
+.btn-view-more-projects:focus {
+    outline: none;
+    box-shadow: 
+        0 25px 50px rgba(99, 102, 241, 0.5),
+        0 0 0 4px rgba(99, 102, 241, 0.3),
+        0 0 80px rgba(99, 102, 241, 0.4);
+}
+
+.btn-view-more-projects svg {
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    position: relative;
+    z-index: 3;
+}
+
+.btn-view-more-projects:hover svg {
+    transform: translateY(4px) rotateZ(180deg) scale(1.3);
+    animation: expandArrow 0.8s ease-in-out;
+}
+
+.btn-view-more-projects.contracted svg {
+    transform: rotateZ(180deg);
+}
+
+.btn-view-more-projects.contracted:hover svg {
+    transform: translateY(-4px) rotateZ(0deg) scale(1.3);
+}
+
+/* Advanced Keyframe Animations */
+@keyframes morphingGlow {
+    0%, 100% { 
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg) brightness(1);
+    }
+    25% { 
+        background-position: 100% 0%;
+        filter: hue-rotate(15deg) brightness(1.1);
+    }
+    50% { 
+        background-position: 100% 100%;
+        filter: hue-rotate(30deg) brightness(1.2);
+    }
+    75% { 
+        background-position: 0% 100%;
+        filter: hue-rotate(15deg) brightness(1.1);
+    }
+}
+
+@keyframes floatingDance {
+    0%, 100% { 
+        transform: translateY(0px) rotateZ(0deg);
+    }
+    25% { 
+        transform: translateY(-3px) rotateZ(1deg);
+    }
+    50% { 
+        transform: translateY(-6px) rotateZ(0deg);
+    }
+    75% { 
+        transform: translateY(-3px) rotateZ(-1deg);
+    }
+}
+
+@keyframes magneticAttraction {
+    0% { 
+        transform: translateY(-12px) rotateX(20deg) scale(1.08);
+    }
+    30% { 
+        transform: translateY(-18px) rotateX(25deg) scale(1.12);
+    }
+    60% { 
+        transform: translateY(-15px) rotateX(22deg) scale(1.10);
+    }
+    100% { 
+        transform: translateY(-12px) rotateX(20deg) scale(1.08);
+    }
+}
+
+@keyframes expandArrow {
+    0%, 100% { 
+        transform: translateY(4px) rotateZ(180deg) scale(1.3);
+    }
+    25% { 
+        transform: translateY(6px) rotateZ(200deg) scale(1.4);
+    }
+    50% { 
+        transform: translateY(8px) rotateZ(220deg) scale(1.5);
+    }
+    75% { 
+        transform: translateY(6px) rotateZ(200deg) scale(1.4);
+    }
+}
+
+/* Particle effect background */
+.view-more-container::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    right: -50px;
+    bottom: -50px;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 20%, rgba(129, 140, 248, 0.1) 0%, transparent 50%);
+    animation: particleFlow 10s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+}
+
+.view-more-container:hover::before {
+    opacity: 1;
+}
+
+@keyframes particleFlow {
+    0%, 100% { 
+        transform: rotate(0deg) scale(1);
+        filter: blur(2px);
+    }
+    33% { 
+        transform: rotate(120deg) scale(1.1);
+        filter: blur(3px);
+    }
+    66% { 
+        transform: rotate(240deg) scale(0.9);
+        filter: blur(2px);
+    }
+}
+
+/* Text enhancement */
+.btn-view-more-projects span {
+    position: relative;
+    z-index: 3;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ==============================================
+   Responsive Design for View More Projects Button
+   ============================================== */
+
+/* Large screens */
+@media (max-width: 1200px) {
+    .view-more-container {
+        margin: var(--spacing-2xl) auto;
+    }
+    
+    .btn-view-more-projects {
+        padding: var(--spacing-md) var(--spacing-2xl);
+        font-size: var(--font-size-sm);
+    }
+}
+
+/* Medium screens */
+@media (max-width: 768px) {
+    .view-more-container {
+        margin: var(--spacing-xl) auto;
+        padding: 0 var(--spacing-md);
+    }
+    
+    .btn-view-more-projects {
+        padding: var(--spacing-md) var(--spacing-xl);
+        font-size: var(--font-size-sm);
+        gap: var(--spacing-sm);
+        border-radius: 50px;
+        min-width: 200px;
+    }
+    
+    .btn-view-more-projects:hover {
+        transform: translateY(-8px) scale(1.05);
+    }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+    .view-more-container {
+        margin: var(--spacing-lg) auto;
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .btn-view-more-projects {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-size-xs);
+        font-weight: 600;
+        min-width: 180px;
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    /* Reduce animations on mobile for performance */
+    .btn-view-more-projects {
+        animation: none;
+    }
+    
+    .btn-view-more-projects:hover {
+        transform: translateY(-4px) scale(1.02);
+        animation: none;
+    }
+    
+    /* Simplify particle effects on mobile */
+    .view-more-container::before {
+        display: none;
+    }
+}
+
+/* ==============================================
+   Button Focus and Accessibility Enhancements
+   ============================================== */
+
+.btn-view-more-projects:focus-visible {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 4px;
+    box-shadow: 
+        0 25px 50px rgba(99, 102, 241, 0.5),
+        0 0 0 4px rgba(99, 102, 241, 0.3),
+        0 0 80px rgba(99, 102, 241, 0.4);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .btn-view-more-projects {
+        border: 2px solid currentColor;
+        background: var(--color-primary);
+    }
+    
+    .btn-view-more-projects:hover {
+        background: var(--color-primary-dark);
+        border-color: white;
+    }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .btn-view-more-projects {
+        animation: none;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+    
+    .btn-view-more-projects:hover {
+        transform: none;
+        animation: none;
+    }
+    
+    .btn-view-more-projects svg {
+        transition: transform 0.2s ease;
+    }
+    
+    .btn-view-more-projects:hover svg {
+        animation: none;
+    }
+    
+    .view-more-container::before {
+        animation: none;
+    }
+}

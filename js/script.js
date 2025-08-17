@@ -260,6 +260,21 @@ function addEntranceAnimations() {
 // ==============================================
 
 /**
+ * Navigate to project detail page
+ * @param {number} projectId - ID of the project to view
+ */
+function navigateToProjectDetail(projectId) {
+    // Store the project ID in session storage for the detail page
+    sessionStorage.setItem('selectedProjectId', projectId);
+    
+    // Navigate to the project detail page
+    window.location.href = './project-detail.html';
+}
+
+// Make the function available globally
+window.navigateToProjectDetail = navigateToProjectDetail;
+
+/**
  * Load and display projects from JSON file
  */
 async function loadProjects() {
@@ -271,6 +286,7 @@ async function loadProjects() {
         
         const response = await fetch(CONFIG.projectsDataPath);
         console.log('Fetch response:', response);
+        console.log('Fetch URL:', CONFIG.projectsDataPath);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -280,6 +296,7 @@ async function loadProjects() {
         console.log('Projects data:', data);
         
         if (data.projects && Array.isArray(data.projects)) {
+            console.log('Found projects:', data.projects.length);
             displayProjects(data.projects);
         } else {
             throw new Error('Invalid projects data structure');
@@ -287,6 +304,7 @@ async function loadProjects() {
         
     } catch (error) {
         console.error('Error loading projects:', error);
+        console.log('Will show error state and sample project');
         showProjectsError();
     }
 }
@@ -304,18 +322,44 @@ function displayProjects(projects) {
     
     elements.projectsGrid.innerHTML = '';
     
-    projects.forEach((project, index) => {
+    // Store all projects globally for expand/contract functionality
+    window.allProjects = projects;
+    
+    // Initially show only top 3 projects
+    const initialProjects = projects.slice(0, 3);
+    
+    initialProjects.forEach((project, index) => {
+        console.log('Creating card for project:', project.title);
         const projectCard = createProjectCard(project, index);
         elements.projectsGrid.appendChild(projectCard);
     });
     
-    // Add animation class to new cards
+    // Add "View More Projects" button if there are more than 3 projects
+    if (projects.length > 3) {
+        const viewMoreContainer = document.createElement('div');
+        viewMoreContainer.className = 'view-more-container';
+        viewMoreContainer.innerHTML = `
+            <button class="btn-view-more-projects" onclick="toggleProjectsView()">
+                View More Projects (${projects.length - 3} more)
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6"/>
+                </svg>
+            </button>
+        `;
+        elements.projectsGrid.appendChild(viewMoreContainer);
+    }
+    
+    // Add animation class to new cards with staggered effect
     const newCards = elements.projectsGrid.querySelectorAll('.project-card');
+    console.log('Created cards:', newCards.length);
     newCards.forEach((card, index) => {
         card.classList.add('fade-in');
+        // Staggered animation with a more dynamic delay
         setTimeout(() => {
             card.classList.add('visible');
-        }, index * 150);
+            // Add a subtle bounce effect
+            card.style.animation = `cardSlideIn 0.6s ease-out ${index * 0.1}s both`;
+        }, index * 100);
     });
     
     console.log('Projects displayed successfully!');
@@ -332,6 +376,15 @@ function createProjectCard(project, index) {
     card.className = 'project-card';
     card.style.animationDelay = `${index * 150}ms`;
     
+    // Create short description (first 120 characters)
+    const shortDescription = project.description.length > 120 
+        ? project.description.substring(0, 120) + '...' 
+        : project.description;
+    
+    // Show only first 4 technologies
+    const displayTechnologies = project.technologies.slice(0, 4);
+    const hasMoreTech = project.technologies.length > 4;
+    
     card.innerHTML = `
         <div class="project-image">
             <img src="${project.image || './assets/images/project-placeholder.jpg'}" 
@@ -341,32 +394,51 @@ function createProjectCard(project, index) {
         </div>
         <div class="project-content">
             <h3 class="project-title">${project.title}</h3>
-            <p class="project-description">${project.description}</p>
+            <p class="project-description">${shortDescription}</p>
             <div class="project-tech">
-                ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+                ${displayTechnologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+                ${hasMoreTech ? `<span class="tech-tag more-tech">+${project.technologies.length - 4} more</span>` : ''}
             </div>
-            <div class="project-links">
-                ${project.liveUrl ? `
-                    <a href="${project.liveUrl}" 
-                       target="_blank" 
-                       rel="noopener noreferrer" 
-                       class="project-link link-primary"
-                       aria-label="View ${project.title} live demo">
-                        Live Demo
-                    </a>
-                ` : ''}
-                ${project.githubUrl ? `
-                    <a href="${project.githubUrl}" 
-                       target="_blank" 
-                       rel="noopener noreferrer" 
-                       class="project-link link-secondary"
-                       aria-label="View ${project.title} source code">
-                        Source Code
-                    </a>
-                ` : ''}
+            <div class="project-actions">
+                <button class="btn-view-details" data-project-id="${project.id}" aria-label="View details for ${project.title}">
+                    View More Details
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                </button>
             </div>
         </div>
     `;
+    
+    // Add click event listener to the button
+    const viewDetailsBtn = card.querySelector('.btn-view-details');
+    viewDetailsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Add loading state
+        viewDetailsBtn.classList.add('loading');
+        viewDetailsBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 11-6.219-8.56"/>
+            </svg>
+            Loading...
+        `;
+        
+        // Add a slight delay for better UX
+        setTimeout(() => {
+            navigateToProjectDetail(project.id);
+        }, 300);
+    });
+    
+    // Add hover effect for the entire card
+    card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-8px)';
+    });
+    
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0)';
+    });
     
     return card;
 }
@@ -405,7 +477,45 @@ function showProjectsError() {
             <button onclick="loadProjects()" class="btn btn-primary">Try Again</button>
         </div>
     `;
+    
+    // Add a sample project as fallback
+    const sampleProject = {
+        id: 1,
+        title: "Sample Project",
+        description: "This is a sample project to demonstrate the project card functionality. Click 'View More Details' to see the project detail page.",
+        technologies: ["JavaScript", "HTML", "CSS", "Sample Tech"],
+        image: "./assets/images/project-placeholder.jpg"
+    };
+    
+    const sampleCard = createProjectCard(sampleProject, 0);
+    elements.projectsGrid.appendChild(sampleCard);
 }
+
+/**
+ * Test function to create a sample project card
+ */
+function testProjectCard() {
+    console.log('Creating test project card...');
+    
+    const testProject = {
+        id: 999,
+        title: "Test Project",
+        description: "This is a test project to verify the View More Details button is working correctly. This description is intentionally long to test the truncation functionality.",
+        technologies: ["JavaScript", "HTML", "CSS", "Testing", "Debug"]
+    };
+    
+    if (elements.projectsGrid) {
+        elements.projectsGrid.innerHTML = '';
+        const testCard = createProjectCard(testProject, 0);
+        elements.projectsGrid.appendChild(testCard);
+        console.log('Test project card created!');
+    } else {
+        console.error('Projects grid not found!');
+    }
+}
+
+// Make test function available globally
+window.testProjectCard = testProjectCard;
 
 // ==============================================
 // Contact Form Functions
@@ -897,6 +1007,21 @@ function initializeWebsite() {
         // Load dynamic content
         loadProjects();
         
+        // Initialize enhanced button effects
+        setTimeout(() => {
+            initializeEnhancedButtons();
+        }, 500);
+        
+        // Failsafe: Check if projects loaded after 3 seconds
+        setTimeout(() => {
+            if (elements.projectsGrid && elements.projectsGrid.children.length === 0) {
+                console.log('Projects not loaded, trying fallback...');
+                testProjectCard();
+            }
+            // Re-initialize enhanced buttons for any dynamically added content
+            initializeEnhancedButtons();
+        }, 3000);
+        
         // Performance and accessibility
         initializePerformanceOptimizations();
         initializeAccessibility();
@@ -957,6 +1082,146 @@ window.addEventListener('offline', () => {
 });
 
 // ==============================================
+// Projects View Toggle Functions
+// ==============================================
+
+/**
+ * Toggle between showing 3 projects and all projects
+ */
+function toggleProjectsView() {
+    const viewMoreBtn = document.querySelector('.btn-view-more-projects');
+    const currentCards = elements.projectsGrid.querySelectorAll('.project-card');
+    const isExpanded = currentCards.length > 3;
+    
+    if (isExpanded) {
+        // Contract: Show only first 3 projects
+        contractProjectsView();
+    } else {
+        // Expand: Show all projects
+        expandProjectsView();
+    }
+}
+
+/**
+ * Expand to show all projects
+ */
+function expandProjectsView() {
+    if (!window.allProjects) return;
+    
+    const viewMoreBtn = document.querySelector('.btn-view-more-projects');
+    const viewMoreContainer = document.querySelector('.view-more-container');
+    
+    // Add loading state to button
+    viewMoreBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 11-6.219-8.56"/>
+        </svg>
+        Loading...
+    `;
+    viewMoreBtn.disabled = true;
+    
+    setTimeout(() => {
+        // Remove the view more container temporarily
+        if (viewMoreContainer) {
+            viewMoreContainer.remove();
+        }
+        
+        // Add remaining projects (starting from index 3)
+        const remainingProjects = window.allProjects.slice(3);
+        remainingProjects.forEach((project, index) => {
+            const projectCard = createProjectCard(project, index + 3);
+            projectCard.style.opacity = '0';
+            projectCard.style.transform = 'translateY(30px)';
+            elements.projectsGrid.appendChild(projectCard);
+            
+            // Animate in the new cards
+            setTimeout(() => {
+                projectCard.style.transition = 'all 0.6s ease-out';
+                projectCard.style.opacity = '1';
+                projectCard.style.transform = 'translateY(0)';
+                projectCard.classList.add('visible');
+            }, index * 100);
+        });
+        
+        // Add "Show Less" button
+        setTimeout(() => {
+            const showLessContainer = document.createElement('div');
+            showLessContainer.className = 'view-more-container';
+            showLessContainer.innerHTML = `
+                <button class="btn-view-more-projects" onclick="toggleProjectsView()">
+                    Show Less Projects
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m18 15-6-6-6 6"/>
+                    </svg>
+                </button>
+            `;
+            elements.projectsGrid.appendChild(showLessContainer);
+            
+            // Re-initialize enhanced buttons for new button
+            setTimeout(() => {
+                initializeEnhancedButtons();
+            }, 100);
+        }, remainingProjects.length * 100 + 200);
+        
+    }, 500);
+}
+
+/**
+ * Contract to show only first 3 projects
+ */
+function contractProjectsView() {
+    if (!window.allProjects) return;
+    
+    const allCards = elements.projectsGrid.querySelectorAll('.project-card');
+    const viewMoreContainer = document.querySelector('.view-more-container');
+    
+    // Animate out cards beyond the first 3
+    const cardsToRemove = Array.from(allCards).slice(3);
+    
+    cardsToRemove.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.transition = 'all 0.4s ease-in';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                card.remove();
+            }, 400);
+        }, index * 50);
+    });
+    
+    // Remove current button
+    if (viewMoreContainer) {
+        setTimeout(() => {
+            viewMoreContainer.remove();
+            
+            // Add "View More Projects" button back
+            const newViewMoreContainer = document.createElement('div');
+            newViewMoreContainer.className = 'view-more-container';
+            newViewMoreContainer.innerHTML = `
+                <button class="btn-view-more-projects" onclick="toggleProjectsView()">
+                    View More Projects (${window.allProjects.length - 3} more)
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </button>
+            `;
+            elements.projectsGrid.appendChild(newViewMoreContainer);
+            
+            // Re-initialize enhanced buttons for new button
+            setTimeout(() => {
+                initializeEnhancedButtons();
+            }, 100);
+        }, cardsToRemove.length * 50 + 200);
+    }
+}
+
+// Make functions available globally
+window.toggleProjectsView = toggleProjectsView;
+window.expandProjectsView = expandProjectsView;
+window.contractProjectsView = contractProjectsView;
+
+// ==============================================
 // Export functions for external use
 // ==============================================
 
@@ -965,5 +1230,191 @@ window.portfolioAPI = {
     smoothScrollTo,
     loadProjects,
     toggleMobileMenu,
-    updateActiveNavLink
+    updateActiveNavLink,
+    navigateToProjectDetail
 };
+
+/**
+ * Enhanced Button Interactions
+ * Adds ripple effects, magnetic hover, and particle animations
+ */
+
+/**
+ * Create ripple effect on button click
+ * @param {HTMLElement} button - Button element
+ * @param {Event} event - Click event
+ */
+function createRippleEffect(button, event) {
+    const ripple = document.createElement('div');
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+    
+    ripple.style.cssText = `
+        position: absolute;
+        border-radius: 50%;
+        transform: scale(0);
+        animation: rippleEffect 0.6s linear;
+        background-color: rgba(255, 255, 255, 0.6);
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        pointer-events: none;
+        z-index: 10;
+    `;
+    
+    button.appendChild(ripple);
+    
+    // Remove ripple after animation
+    setTimeout(() => {
+        if (ripple.parentNode) {
+            ripple.parentNode.removeChild(ripple);
+        }
+    }, 600);
+}
+
+/**
+ * Add magnetic hover effect to button
+ * @param {HTMLElement} button - Button element
+ */
+function addMagneticEffect(button) {
+    let isHovering = false;
+    
+    button.addEventListener('mouseenter', () => {
+        isHovering = true;
+    });
+    
+    button.addEventListener('mouseleave', () => {
+        isHovering = false;
+        button.style.transform = '';
+    });
+    
+    button.addEventListener('mousemove', (e) => {
+        if (!isHovering) return;
+        
+        const rect = button.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const deltaX = (e.clientX - centerX) * 0.1;
+        const deltaY = (e.clientY - centerY) * 0.1;
+        
+        button.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(1.05)`;
+    });
+}
+
+/**
+ * Create floating particles around element
+ * @param {HTMLElement} element - Element to add particles to
+ */
+function createFloatingParticles(element) {
+    const particleCount = 8;
+    const particles = [];
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.8), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            animation: floatParticle ${3 + Math.random() * 2}s ease-in-out infinite;
+            animation-delay: ${Math.random() * 2}s;
+        `;
+        
+        element.appendChild(particle);
+        particles.push(particle);
+        
+        // Random initial position around the button
+        const angle = (i / particleCount) * Math.PI * 2;
+        const radius = 50 + Math.random() * 30;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        
+        particle.style.left = `calc(50% + ${x}px)`;
+        particle.style.top = `calc(50% + ${y}px)`;
+    }
+    
+    return particles;
+}
+
+/**
+ * Initialize enhanced button effects
+ */
+function initializeEnhancedButtons() {
+    // Add ripple effect to all buttons
+    document.addEventListener('click', (e) => {
+        if (e.target.matches('.btn-view-details, .btn-view-more-projects') || 
+            e.target.closest('.btn-view-details, .btn-view-more-projects')) {
+            const button = e.target.closest('.btn-view-details, .btn-view-more-projects') || e.target;
+            createRippleEffect(button, e);
+        }
+    });
+    
+    // Add magnetic effects to existing buttons
+    const enhancedButtons = document.querySelectorAll('.btn-view-details, .btn-view-more-projects');
+    enhancedButtons.forEach(button => {
+        addMagneticEffect(button);
+        
+        // Add relative positioning for particles
+        button.style.position = 'relative';
+        
+        // Create particles on hover
+        let particles = [];
+        button.addEventListener('mouseenter', () => {
+            if (particles.length === 0) {
+                particles = createFloatingParticles(button);
+            }
+        });
+        
+        button.addEventListener('mouseleave', () => {
+            // Remove particles after delay
+            setTimeout(() => {
+                particles.forEach(particle => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                });
+                particles = [];
+            }, 1000);
+        });
+    });
+}
+
+// Add CSS for particle animation
+const particleStyle = document.createElement('style');
+particleStyle.textContent = `
+    @keyframes rippleEffect {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes floatParticle {
+        0%, 100% {
+            transform: translateY(0px) scale(1);
+            opacity: 0.6;
+        }
+        25% {
+            transform: translateY(-20px) scale(1.2);
+            opacity: 1;
+        }
+        50% {
+            transform: translateY(-40px) scale(0.8);
+            opacity: 0.8;
+        }
+        75% {
+            transform: translateY(-20px) scale(1.1);
+            opacity: 1;
+        }
+    }
+`;
+document.head.appendChild(particleStyle);
+
+// Initialize enhanced button effects
+initializeEnhancedButtons();
