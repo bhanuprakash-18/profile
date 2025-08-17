@@ -329,7 +329,7 @@ a:hover {
     display: flex;
     align-items: center;
     padding: var(--navbar-height) 0 var(--spacing-4xl) 0;
-    background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+    background: transparent;
     position: relative;
     overflow: hidden;
 }
@@ -444,8 +444,8 @@ a:hover {
    About Section
    ============================================== */
 .about-section {
-    padding: var(--spacing-4xl) 0;
-    background: var(--color-bg-secondary);
+    padding: var(--spacing-2xl) 0;
+    background: transparent;
 }
 
 .about-content {
@@ -572,8 +572,10 @@ a:hover {
    Projects Section
    ============================================== */
 .projects-section {
-    padding: var(--spacing-4xl) 0;
-    background: var(--color-bg-primary);
+    padding: var(--spacing-2xl) 0;
+    background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+    position: relative;
 }
 
 .projects-grid {
@@ -903,8 +905,8 @@ a:hover {
    Blogs Section
    ============================================== */
 .blogs-section {
-    padding: var(--spacing-4xl) 0;
-    background: var(--color-bg-secondary);
+    padding: var(--spacing-2xl) 0;
+    background: transparent;
 }
 
 .blogs-grid {
@@ -1524,8 +1526,10 @@ a:hover {
    Contact Section
    ============================================== */
 .contact-section {
-    padding: var(--spacing-4xl) 0;
-    background: var(--color-bg-secondary);
+    padding: var(--spacing-2xl) 0;
+    background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+    position: relative;
 }
 
 .contact-content {
@@ -2027,7 +2031,7 @@ a:hover {
     color: white;
 }
 
-@keyframes bounceIn {
+@keyframes bounce {
     0% {
         opacity: 0;
         transform: scale(0.3);
@@ -2329,6 +2333,32 @@ a:hover {
     box-shadow: var(--shadow-lg);
     position: relative;
     overflow: hidden;
+}
+
+/* Add beautiful gradient backgrounds for alternating sections */
+.hero-section,
+.projects-section,
+.contact-section {
+    background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+}
+
+/* Remove section backgrounds and ensure clean layout */
+.about-section,
+.projects-section,
+.blogs-section,
+.education-section,
+.contact-section {
+    margin: 0;
+}
+
+/* Individual section styling will override this */
+.projects-section {
+    padding: var(--spacing-2xl) 0;
+}
+
+.hero-section {
+    background: transparent;
 }
 
 /* Background gradient overlay */
@@ -3069,4 +3099,211 @@ a:hover {
     .view-more-container::before {
         animation: none;
     }
+}
+
+/* Animated Tech Stack Background */
+.tech-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.tech-particle {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    opacity: 0.4;
+    pointer-events: none;
+    filter: brightness(1.8) contrast(1.4) saturate(1.2);
+    transition: all 0.3s ease;
+}
+
+/* Simplified particle positioning and animation */
+.tech-particle:nth-child(odd) {
+    left: -50px;
+    animation: floatLeft 20s linear infinite;
+}
+
+.tech-particle:nth-child(even) {
+    right: -50px;
+    animation: floatRight 25s linear infinite;
+}
+
+/* Individual positioning - more particles distributed across screen */
+.tech-particle:nth-child(1) { top: 5%; animation-delay: 0s; }
+.tech-particle:nth-child(2) { top: 15%; animation-delay: -3s; }
+.tech-particle:nth-child(3) { top: 25%; animation-delay: -6s; }
+.tech-particle:nth-child(4) { top: 35%; animation-delay: -9s; }
+.tech-particle:nth-child(5) { top: 45%; animation-delay: -12s; }
+.tech-particle:nth-child(6) { top: 55%; animation-delay: -15s; }
+.tech-particle:nth-child(7) { top: 65%; animation-delay: -18s; }
+.tech-particle:nth-child(8) { top: 75%; animation-delay: -21s; }
+.tech-particle:nth-child(9) { top: 85%; animation-delay: -24s; }
+.tech-particle:nth-child(10) { top: 95%; animation-delay: -27s; }
+.tech-particle:nth-child(11) { top: 8%; animation-delay: -30s; }
+.tech-particle:nth-child(12) { top: 18%; animation-delay: -33s; }
+.tech-particle:nth-child(13) { top: 28%; animation-delay: -36s; }
+.tech-particle:nth-child(14) { top: 38%; animation-delay: -39s; }
+.tech-particle:nth-child(15) { top: 48%; animation-delay: -42s; }
+.tech-particle:nth-child(16) { top: 58%; animation-delay: -45s; }
+.tech-particle:nth-child(17) { top: 68%; animation-delay: -48s; }
+.tech-particle:nth-child(18) { top: 78%; animation-delay: -51s; }
+.tech-particle:nth-child(19) { top: 88%; animation-delay: -54s; }
+.tech-particle:nth-child(20) { top: 98%; animation-delay: -57s; }
+
+/* Simplified floating animations */
+@keyframes floatLeft {
+    0% {
+        transform: translateX(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.4;
+        transform: translateX(50px) rotate(45deg) scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: translateX(calc(50vw + 25px)) rotate(180deg) scale(1.1);
+    }
+    90% {
+        opacity: 0.4;
+        transform: translateX(calc(100vw + 50px)) rotate(315deg) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(calc(100vw + 150px)) rotate(360deg) scale(0.8);
+    }
+}
+
+@keyframes floatRight {
+    0% {
+        transform: translateX(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.4;
+        transform: translateX(-50px) rotate(-45deg) scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: translateX(calc(-50vw - 25px)) rotate(-180deg) scale(1.1);
+    }
+    90% {
+        opacity: 0.4;
+        transform: translateX(calc(-100vw - 50px)) rotate(-315deg) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(calc(-100vw - 150px)) rotate(-360deg) scale(0.8);
+    }
+}
+
+/* Hover effect for tech particles */
+.tech-particle:hover {
+    opacity: 0.8;
+    transform: scale(1.5);
+    z-index: 1;
+    filter: brightness(2.0) contrast(1.6) saturate(1.5);
+}
+
+/* Background particle effects with tech symbols */
+.hero-section::after {
+    content: '⚙️ 🎨 🧠 ✍️ ☁️ 💡  ⚙️ � 🧠 ✍️ ☁️ � � ⚙️ � 🧠 ✍️ ☁️ 💡';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    opacity: 0.03;
+    letter-spacing: 30px;
+    line-height: 4;
+    word-spacing: 25px;
+    animation: none;
+    pointer-events: none;
+    z-index: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-around;
+    justify-content: space-around;
+}
+
+/* Ensure hero content stays above background */
+.hero-content {
+    position: relative;
+    z-index: 10;
+}
+
+/* Responsive adjustments for tech background */
+@media (max-width: 1024px) {
+    .tech-item {
+        font-size: var(--font-size-xs);
+        padding: 4px 8px;
+    }
+    
+    .tech-item:nth-child(n+20) {
+        display: none; /* Hide some items on smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .tech-item {
+        font-size: 10px;
+        padding: 2px 6px;
+        animation-duration: 15s;
+    }
+    
+    .tech-item:nth-child(n+15) {
+        display: none; /* Show fewer items on mobile */
+    }
+    
+    .hero-section::after {
+        opacity: 0.02;
+        font-size: 10px;
+        letter-spacing: 15px;
+    }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .tech-item {
+        animation: none;
+        opacity: 0.08;
+        position: static;
+        display: inline-block;
+        margin: var(--spacing-xs);
+    }
+    
+    .hero-section::after {
+        animation: none;
+        opacity: 0.02;
+    }
+    
+    .tech-background {
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-lg);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: var(--border-radius-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+}
+
+/* Ensure all sections stay above floating particles */
+.container, 
+.about-section,
+.projects-section,
+.blogs-section,
+.education-section,
+.contact-section,
+header {
+    position: relative;
+    z-index: 10;
 }
