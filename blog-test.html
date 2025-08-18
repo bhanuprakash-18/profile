@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Functionality Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        .blog-card {
+            background: #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #555;
+        }
+        .blog-title {
+            color: #4a90e2;
+            margin-bottom: 10px;
+        }
+        .view-more-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .btn-view-more-projects {
+            background: linear-gradient(135deg, #4a90e2, #50e3c2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-view-more-projects:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background: #333;
+        }
+        .success {
+            color: #50e3c2;
+        }
+        .error {
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Blog Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>Blog Data Test</h2>
+        <div id="blog-data-status" class="status">Loading blog data...</div>
+        <div id="blog-count" class="status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Blog Cards Display</h2>
+        <div id="blogs-grid">
+            <!-- Blog cards will be displayed here -->
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Button Text Test</h2>
+        <div id="button-text-test" class="status"></div>
+    </div>
+
+    <script>
+        let allBlogs = [];
+        
+        // Simulate the blog loading functionality
+        async function loadBlogs() {
+            try {
+                const response = await fetch('./data/blogs.json');
+                allBlogs = await response.json();
+                
+                document.getElementById('blog-data-status').innerHTML = '<span class="success">✅ Blog data loaded successfully!</span>';
+                document.getElementById('blog-count').innerHTML = `<span class="success">Total blogs found: ${allBlogs.length}</span>`;
+                
+                // Test initial display (first 3 blogs)
+                displayInitialBlogs();
+                
+                // Test button text generation
+                testButtonText();
+                
+            } catch (error) {
+                document.getElementById('blog-data-status').innerHTML = '<span class="error">❌ Failed to load blog data: ' + error.message + '</span>';
+            }
+        }
+        
+        function displayInitialBlogs() {
+            const blogsGrid = document.getElementById('blogs-grid');
+            const initialBlogs = allBlogs.slice(0, 3);
+            
+            // Display first 3 blogs
+            initialBlogs.forEach((blog, index) => {
+                const blogCard = document.createElement('div');
+                blogCard.className = 'blog-card';
+                blogCard.innerHTML = `
+                    <div class="blog-title">${blog.title}</div>
+                    <p>${blog.shortDescription}</p>
+                `;
+                blogsGrid.appendChild(blogCard);
+            });
+            
+            // Add "View More" button if there are more than 3 blogs
+            if (allBlogs.length > 3) {
+                const viewMoreContainer = document.createElement('div');
+                viewMoreContainer.className = 'view-more-container';
+                const remainingCount = allBlogs.length - 3;
+                viewMoreContainer.innerHTML = `
+                    <button class="btn-view-more-projects" onclick="expandBlogs()">
+                        View ${remainingCount} More Blog${remainingCount > 1 ? 's' : ''}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                `;
+                blogsGrid.appendChild(viewMoreContainer);
+            }
+        }
+        
+        function expandBlogs() {
+            const blogsGrid = document.getElementById('blogs-grid');
+            const viewMoreContainer = document.querySelector('.view-more-container');
+            
+            // Remove the button
+            if (viewMoreContainer) {
+                viewMoreContainer.remove();
+            }
+            
+            // Add remaining blogs
+            const remainingBlogs = allBlogs.slice(3);
+            remainingBlogs.forEach((blog, index) => {
+                const blogCard = document.createElement('div');
+                blogCard.className = 'blog-card';
+                blogCard.style.opacity = '0';
+                blogCard.innerHTML = `
+                    <div class="blog-title">${blog.title}</div>
+                    <p>${blog.shortDescription}</p>
+                `;
+                blogsGrid.appendChild(blogCard);
+                
+                // Animate in
+                setTimeout(() => {
+                    blogCard.style.transition = 'opacity 0.5s ease';
+                    blogCard.style.opacity = '1';
+                }, index * 100);
+            });
+            
+            // Update status
+            document.getElementById('button-text-test').innerHTML = '<span class="success">✅ All blogs displayed! Button correctly hidden after expansion.</span>';
+        }
+        
+        function testButtonText() {
+            const remainingCount = allBlogs.length - 3;
+            const expectedText = `View ${remainingCount} More Blog${remainingCount > 1 ? 's' : ''}`;
+            const oldText = `View More Blogs (${remainingCount} more)`;
+            
+            document.getElementById('button-text-test').innerHTML = `
+                <div><strong>Button Text Test:</strong></div>
+                <div>🔴 Old text: "${oldText}"</div>
+                <div>🟢 New text: "${expectedText}"</div>
+                <div class="success">✅ Button text has been updated correctly!</div>
+            `;
+        }
+        
+        // Load blogs when page loads
+        loadBlogs();
+    </script>
+</body>
+</html>

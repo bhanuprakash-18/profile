@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Loading Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .test-image {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            object-fit: contain;
+            background: #333;
+        }
+        .test-image.error {
+            border-color: red;
+            background: #500;
+        }
+        .test-image.loaded {
+            border-color: green;
+            background: #050;
+        }
+        .stats {
+            margin: 10px 0;
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+        }
+        .loading {
+            color: orange;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Portfolio Website Image Loading Test</h1>
+    
+    <div id="stats" class="stats">
+        <div>Status: <span id="status" class="loading">Testing...</span></div>
+        <div>Total Images: <span id="total">0</span></div>
+        <div>Loaded: <span id="loaded" class="success">0</span></div>
+        <div>Failed: <span id="failed" class="error">0</span></div>
+        <div>Progress: <span id="progress">0%</span></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎨 Tech Particle Images</h2>
+        <div id="tech-particles" class="image-grid"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Icon Images</h2>
+        <div id="icons" class="image-grid"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>👤 Profile Image</h2>
+        <div id="profile" class="image-grid"></div>
+    </div>
+
+    <script>
+        // Image paths to test
+        const imagePaths = {
+            techParticles: [
+                './assets/animation/image.png',
+                './assets/animation/image_copy.png',
+                './assets/animation/image_copy_2.png',
+                './assets/animation/image_copy_3.png',
+                './assets/animation/image_copy_4.png',
+                './assets/animation/image_copy_5.png',
+                './assets/animation/image_copy_6.png',
+                './assets/animation/image_copy_7.png',
+                './assets/animation/image_copy_8.png',
+                './assets/animation/image_copy_9.png',
+                './assets/animation/image_copy_10.png',
+                './assets/animation/image_copy_11.png',
+                './assets/animation/image_copy_12.png',
+                './assets/animation/image_copy_13.png',
+                './assets/animation/image_copy_14.png',
+                './assets/animation/image_copy_15.png',
+                './assets/animation/image_copy_16.png',
+                './assets/animation/image_copy_17.png',
+                './assets/animation/image_copy_18.png',
+                './assets/animation/tensorflow.png'
+            ],
+            icons: [
+                './assets/icons/education.png',
+                './assets/icons/image.png',
+                './assets/icons/skills.png',
+                './assets/icons/work.png',
+                './assets/icons/workexperience.png'
+            ],
+            profile: [
+                './assets/images/profile.jpg'
+            ]
+        };
+
+        let totalImages = 0;
+        let loadedImages = 0;
+        let failedImages = 0;
+
+        // Count total images
+        Object.values(imagePaths).forEach(category => {
+            totalImages += category.length;
+        });
+
+        document.getElementById('total').textContent = totalImages;
+
+        function updateStats() {
+            document.getElementById('loaded').textContent = loadedImages;
+            document.getElementById('failed').textContent = failedImages;
+            document.getElementById('progress').textContent = 
+                Math.round(((loadedImages + failedImages) / totalImages) * 100) + '%';
+            
+            if (loadedImages + failedImages === totalImages) {
+                const statusEl = document.getElementById('status');
+                if (failedImages === 0) {
+                    statusEl.textContent = '✅ All images loaded successfully!';
+                    statusEl.className = 'success';
+                } else {
+                    statusEl.textContent = `⚠️ ${failedImages} images failed to load`;
+                    statusEl.className = 'error';
+                }
+            }
+        }
+
+        function testImage(src, container, label) {
+            const img = document.createElement('img');
+            img.src = src;
+            img.className = 'test-image';
+            img.title = `${label}: ${src}`;
+            
+            img.addEventListener('load', function() {
+                this.classList.add('loaded');
+                loadedImages++;
+                updateStats();
+                console.log('✅ Loaded:', src);
+            });
+            
+            img.addEventListener('error', function() {
+                this.classList.add('error');
+                failedImages++;
+                updateStats();
+                console.error('❌ Failed:', src);
+                
+                // Add error indicator
+                const errorDiv = document.createElement('div');
+                errorDiv.textContent = '❌';
+                errorDiv.style.cssText = 'position: absolute; top: 0; right: 0; background: red; color: white; font-size: 12px; padding: 2px;';
+                this.parentNode.style.position = 'relative';
+                this.parentNode.appendChild(errorDiv);
+            });
+            
+            container.appendChild(img);
+        }
+
+        // Test all images
+        function runTests() {
+            // Tech particles
+            const techParticlesContainer = document.getElementById('tech-particles');
+            imagePaths.techParticles.forEach(src => {
+                testImage(src, techParticlesContainer, 'Tech Particle');
+            });
+
+            // Icons
+            const iconsContainer = document.getElementById('icons');
+            imagePaths.icons.forEach(src => {
+                testImage(src, iconsContainer, 'Icon');
+            });
+
+            // Profile
+            const profileContainer = document.getElementById('profile');
+            imagePaths.profile.forEach(src => {
+                testImage(src, profileContainer, 'Profile');
+            });
+        }
+
+        // Run tests when page loads
+        document.addEventListener('DOMContentLoaded', runTests);
+    </script>
+</body>
+</html>

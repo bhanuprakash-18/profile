@@ -340,9 +340,10 @@ function displayProjects(projects) {
     if (projects.length > 3) {
         const viewMoreContainer = document.createElement('div');
         viewMoreContainer.className = 'view-more-container';
+        const remainingCount = projects.length - 3;
         viewMoreContainer.innerHTML = `
             <button class="btn-view-more-projects" onclick="toggleProjectsView()">
-                View More Projects (${projects.length - 3} more)
+                View ${remainingCount} More Project${remainingCount > 1 ? 's' : ''}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m6 9 6 6 6-6"/>
                 </svg>
@@ -389,10 +390,10 @@ function createProjectCard(project, index) {
     
     card.innerHTML = `
         <div class="project-image">
-            <img src="${project.image || './assets/images/project-placeholder.jpg'}" 
+            <img src="${project.image || './assets/images/project-placeholder.svg'}" 
                  alt="${project.title}" 
                  loading="lazy"
-                 onerror="this.src='./assets/images/project-placeholder.jpg'">
+                 onerror="this.src='./assets/images/project-placeholder.svg'">
         </div>
         <div class="project-content">
             <h3 class="project-title">${project.title}</h3>
@@ -486,7 +487,7 @@ function showProjectsError() {
         title: "Sample Project",
         description: "This is a sample project to demonstrate the project card functionality. Click 'View More Details' to see the project detail page.",
         technologies: ["JavaScript", "HTML", "CSS", "Sample Tech"],
-        image: "./assets/images/project-placeholder.jpg"
+        image: "./assets/images/project-placeholder.svg"
     };
     
     const sampleCard = createProjectCard(sampleProject, 0);
@@ -1201,9 +1202,10 @@ function contractProjectsView() {
             // Add "View More Projects" button back
             const newViewMoreContainer = document.createElement('div');
             newViewMoreContainer.className = 'view-more-container';
+            const remainingCount = window.allProjects.length - 3;
             newViewMoreContainer.innerHTML = `
                 <button class="btn-view-more-projects" onclick="toggleProjectsView()">
-                    View More Projects (${window.allProjects.length - 3} more)
+                    View ${remainingCount} More Project${remainingCount > 1 ? 's' : ''}
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m6 9 6 6 6-6"/>
                     </svg>
@@ -1286,9 +1288,10 @@ function displayBlogs(blogs) {
     if (blogs.length > 3) {
         const viewMoreContainer = document.createElement('div');
         viewMoreContainer.className = 'view-more-container';
+        const remainingCount = blogs.length - 3;
         viewMoreContainer.innerHTML = `
             <button class="btn-view-more-projects" onclick="toggleBlogsView()">
-                View More Blogs (${blogs.length - 3} more)
+                View ${remainingCount} More Blog${remainingCount > 1 ? 's' : ''}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m6 9 6 6 6-6"/>
                 </svg>
@@ -1342,10 +1345,10 @@ function createBlogCard(blog, index) {
     
     card.innerHTML = `
         <div class="blog-card-image">
-            <img src="${blog.image || './assets/images/blog-placeholder.jpg'}" 
+            <img src="${blog.image || './assets/images/blog-placeholder.svg'}" 
                  alt="${blog.title}" 
                  loading="lazy"
-                 onerror="this.src='./assets/images/blog-placeholder.jpg'">
+                 onerror="this.src='./assets/images/blog-placeholder.svg'">
         </div>
         <div class="blog-card-content">
             <div class="blog-card-meta">
@@ -1457,13 +1460,11 @@ function toggleBlogsView() {
     const currentCards = elements.blogsGrid.querySelectorAll('.blog-card');
     const isExpanded = currentCards.length > 3;
     
-    if (isExpanded) {
-        // Contract: Show only first 3 blogs
-        contractBlogsView();
-    } else {
+    if (!isExpanded) {
         // Expand: Show all blogs
         expandBlogsView();
     }
+    // Note: No "Show Less" functionality - button will be hidden after expansion
 }
 
 /**
@@ -1507,25 +1508,8 @@ function expandBlogsView() {
             }, index * 100);
         });
         
-        // Add "Show Less" button
-        setTimeout(() => {
-            const showLessContainer = document.createElement('div');
-            showLessContainer.className = 'view-more-container';
-            showLessContainer.innerHTML = `
-                <button class="btn-view-more-projects" onclick="toggleBlogsView()">
-                    Show Less Blogs
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m18 15-6-6-6 6"/>
-                    </svg>
-                </button>
-            `;
-            elements.blogsGrid.appendChild(showLessContainer);
-            
-            // Re-initialize enhanced buttons for new button
-            setTimeout(() => {
-                initializeEnhancedButtons();
-            }, 100);
-        }, remainingBlogs.length * 100 + 200);
+        // Hide the button completely when all blogs are shown
+        // No "Show Less" button needed - users can refresh or navigate to see fewer blogs
         
     }, 500);
 }
@@ -1562,9 +1546,10 @@ function contractBlogsView() {
             // Add "View More Blogs" button back
             const newViewMoreContainer = document.createElement('div');
             newViewMoreContainer.className = 'view-more-container';
+            const remainingCount = window.allBlogs.length - 3;
             newViewMoreContainer.innerHTML = `
                 <button class="btn-view-more-projects" onclick="toggleBlogsView()">
-                    View More Blogs (${window.allBlogs.length - 3} more)
+                    View ${remainingCount} More Blog${remainingCount > 1 ? 's' : ''}
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m6 9 6 6 6-6"/>
                     </svg>
@@ -1770,3 +1755,110 @@ document.head.appendChild(particleStyle);
 
 // Initialize enhanced button effects
 initializeEnhancedButtons();
+
+// ==============================================
+// Image Loading Error Handling
+// ==============================================
+
+/**
+ * Handle image loading errors
+ */
+function handleImageLoadingErrors() {
+    // Handle tech particle images
+    const techParticles = document.querySelectorAll('.tech-particle');
+    let loadedImages = 0;
+    let failedImages = 0;
+    
+    techParticles.forEach((img, index) => {
+        // Add error event listener
+        img.addEventListener('error', function() {
+            console.warn(`Failed to load tech particle image: ${this.src}`);
+            failedImages++;
+            
+            // Hide the broken image and show fallback
+            this.style.display = 'none';
+            
+            // Create a fallback element
+            const fallback = document.createElement('div');
+            fallback.className = 'tech-particle tech-particle-fallback';
+            fallback.style.cssText = this.style.cssText;
+            fallback.style.display = 'block';
+            fallback.style.background = 'radial-gradient(circle, rgba(74, 144, 226, 0.4) 0%, rgba(80, 227, 194, 0.4) 100%)';
+            fallback.style.borderRadius = '50%';
+            fallback.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+            
+            // Insert fallback after the failed image
+            this.parentNode.insertBefore(fallback, this.nextSibling);
+        });
+        
+        // Add load event listener
+        img.addEventListener('load', function() {
+            loadedImages++;
+            console.log(`Successfully loaded tech particle image: ${this.src}`);
+        });
+        
+        // Force check if image is already loaded (cached)
+        if (img.complete) {
+            if (img.naturalWidth > 0) {
+                loadedImages++;
+                console.log(`Tech particle image was already loaded: ${img.src}`);
+            } else {
+                // Image failed to load
+                img.dispatchEvent(new Event('error'));
+            }
+        }
+    });
+    
+    // Log summary after a short delay
+    setTimeout(() => {
+        console.log(`Image loading summary: ${loadedImages} loaded, ${failedImages} failed out of ${techParticles.length} total`);
+        if (failedImages > 0) {
+            console.warn(`${failedImages} tech particle images failed to load. Fallback elements created.`);
+        }
+    }, 2000);
+}
+
+// Handle other critical images
+function handleCriticalImages() {
+    const profileImg = document.querySelector('.profile-img');
+    const iconImages = document.querySelectorAll('img[src*="/icons/"]');
+    
+    if (profileImg) {
+        profileImg.addEventListener('load', function() {
+            console.log('Profile image loaded successfully:', this.src);
+            this.setAttribute('data-loaded', 'true');
+        });
+        
+        profileImg.addEventListener('error', function() {
+            console.error('Profile image failed to load:', this.src);
+            this.style.background = 'linear-gradient(135deg, #4a90e2, #50e3c2)';
+            this.style.display = 'flex';
+            this.style.alignItems = 'center';
+            this.style.justifyContent = 'center';
+            this.innerHTML = '<span style="color: white; font-size: 24px;">BP</span>';
+        });
+        
+        // If image is already loaded (cached), set data-loaded immediately
+        if (profileImg.complete && profileImg.naturalHeight !== 0) {
+            profileImg.setAttribute('data-loaded', 'true');
+        }
+    }
+    
+    iconImages.forEach(img => {
+        img.addEventListener('error', function() {
+            console.warn('Icon failed to load:', this.src);
+            this.style.background = 'rgba(74, 144, 226, 0.1)';
+            this.style.border = '2px solid rgba(74, 144, 226, 0.3)';
+            this.style.borderRadius = '8px';
+        });
+    });
+}
+
+// Initialize image error handling when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Small delay to ensure all images are in the DOM
+    setTimeout(() => {
+        handleImageLoadingErrors();
+        handleCriticalImages();
+    }, 100);
+});
