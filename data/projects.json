@@ -1,7 +1,7 @@
 {
   "projects": [
     {
-      "id": 3,
+      "id": 1,
       "title": "Micrograd Neural Network Engine",
       "description": "A minimal neural network engine inspired by micrograd, implemented in pure Python with a custom autograd system and MLP modules for educational deep learning experiments.",
       "detailedDescription": "This project is a lightweight neural network engine built from scratch to understand the fundamentals of backpropagation and neural network training. It is inspired by Andrej Karpathy’s micrograd, focusing on simplicity and educational value. The project includes an automatic differentiation engine, basic neural network components (Neuron, Layer, MLP), and a Jupyter notebook demo to train and visualize results. By avoiding heavy frameworks, it emphasizes hands-on learning and clear insights into how gradients and training loops work at the lowest level.",
