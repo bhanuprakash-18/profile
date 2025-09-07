@@ -2183,10 +2183,6 @@ a:hover {
         font-size: var(--font-size-xs);
     }
     
-    .btn-view-details:hover {
-        transform: translateY(-2px);
-    }
-    
     @keyframes arrowBounce {
         0%, 100% { transform: translateX(2px) scale(1.05); }
         50% { transform: translateX(4px) scale(1.1); }
@@ -3296,6 +3292,10 @@ a:hover {
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
     .tech-item {
+        animation: none;
+        opacity: 0.08;
+        position: static;
+        display: inline-block;
         animation: none;
         opacity: 0.08;
         position: static;

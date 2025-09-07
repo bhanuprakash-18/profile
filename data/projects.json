@@ -1,82 +1,78 @@
 {
   "projects": [
     {
-      "id": 1,
-      "title": "Mask R-CNN Implementation",
-      "description": "Implemented the Mask R-CNN architecture from scratch using TensorFlow and Keras for object detection and instance segmentation tasks. Preprocessed datasets like COCO and custom images, generated region proposals using RPNs (Region Proposal Networks), and applied RoIAlign for precise mask predictions.",
-      "detailedDescription": "This project involved building a complete implementation of the Mask R-CNN architecture from the ground up. The challenge was to understand and implement every component of this complex computer vision model, from the backbone ResNet feature extractor to the final mask prediction heads. The implementation required deep understanding of convolutional neural networks, region proposal networks, and multi-task learning.",
-      "problemStatement": "Instance segmentation is a critical computer vision task that combines object detection and semantic segmentation. While pre-trained models exist, understanding the underlying architecture by implementing it from scratch provides invaluable insights into modern deep learning techniques and enables customization for specific use cases.",
-      "approach": "I started by implementing the backbone ResNet architecture, then built the Feature Pyramid Network (FPN) for multi-scale feature extraction. The Region Proposal Network (RPN) was implemented to generate object proposals, followed by the ROI pooling layers and the final classification and mask prediction heads. Extensive testing was conducted on the COCO dataset to validate the implementation.",
+      "id": 3,
+      "title": "Micrograd Neural Network Engine",
+      "description": "A minimal neural network engine inspired by micrograd, implemented in pure Python with a custom autograd system and MLP modules for educational deep learning experiments.",
+      "detailedDescription": "This project is a lightweight neural network engine built from scratch to understand the fundamentals of backpropagation and neural network training. It is inspired by Andrej Karpathy’s micrograd, focusing on simplicity and educational value. The project includes an automatic differentiation engine, basic neural network components (Neuron, Layer, MLP), and a Jupyter notebook demo to train and visualize results. By avoiding heavy frameworks, it emphasizes hands-on learning and clear insights into how gradients and training loops work at the lowest level.",
+      "problemStatement": "Most modern deep learning frameworks abstract away the complexities of automatic differentiation and neural network construction. This project tackles the challenge of implementing these core components from scratch to demystify the internals of backpropagation and model training.",
+      "approach": "The project started by implementing the Value class in engine.py, which supports scalar values, operations, and automatic differentiation. Next, a neural network module (nn.py) was developed with classes for Neuron, Layer, and MLP. Finally, a Jupyter notebook (test.ipynb) demonstrates how to train an MLP on a toy dataset, showing both forward and backward passes in action.",
       "technologies": [
-        "TensorFlow",
-        "Keras",
         "Python",
-        "Computer Vision",
-        "Deep Learning",
-        "COCO Dataset",
-        "RPN",
-        "RoIAlign"
+        "Autograd",
+        "Neural Networks",
+        "Jupyter Notebook",
+        "Matplotlib",
+        "Pandas"
       ],
-      "image": "./assets/images/project-1.jpg",
+      "image": "./assets/images/project-3.jpg",
       "liveUrl": null,
-      "githubUrl": "https://github.com/bhanuprakash-18/mask-rcnn-implementation",
-      "featured": true,
+      "githubUrl": "https://github.com/bhanuprakash-18/micrograd",
+      "featured": false,
       "status": "completed",
-      "startDate": "2024-03-01",
-      "endDate": "2024-05-15",
+      "startDate": "2024-12-20",
+      "endDate": "2025-01-15",
       "highlights": [
-        "Built complete Mask R-CNN architecture from scratch with 95% accuracy on COCO validation set",
-        "Achieved precise instance segmentation with mean Average Precision (mAP) of 0.84",
-        "Implemented custom RPN and RoIAlign algorithms for improved spatial accuracy",
-        "Optimized training pipeline reducing convergence time by 40% through advanced augmentation techniques",
-        "Created comprehensive documentation and code examples for educational purposes"
+        "Built a minimal autograd engine supporting basic mathematical operations",
+        "Implemented core neural network components: Neuron, Layer, and MLP",
+        "Created a training demo notebook for visualization and experimentation",
+        "Enabled forward and backward passes without external deep learning libraries",
+        "Strengthened understanding of backpropagation and gradient-based optimization"
       ],
       "codeExamples": [
         {
-          "title": "RPN Implementation",
-          "description": "Core Region Proposal Network implementation",
+          "title": "Using the MLP",
+          "description": "Example of creating and running a simple multi-layer perceptron",
           "language": "python",
-          "snippet": "class RegionProposalNetwork(tf.keras.layers.Layer):\n    def __init__(self, anchor_scales, anchor_ratios, **kwargs):\n        super().__init__(**kwargs)\n        self.anchor_scales = anchor_scales\n        self.anchor_ratios = anchor_ratios\n        self.conv = tf.keras.layers.Conv2D(256, 3, padding='same')\n        self.classifier = tf.keras.layers.Conv2D(2 * len(anchor_scales) * len(anchor_ratios), 1)\n        self.regressor = tf.keras.layers.Conv2D(4 * len(anchor_scales) * len(anchor_ratios), 1)"
+          "snippet": "from engine import Value\nfrom nn import MLP\n\n# Create a simple MLP with 3 inputs, two hidden layers of 4 neurons, and 1 output\nmlp = MLP(3, [4, 4, 1])\n\n# Forward pass\noutput = mlp([2.0, 3.0, -1.0])\nprint(output)"
         }
       ]
     },
     {
       "id": 2,
-      "title": "COVID-19 Spread Simulation",
-      "description": "Built a comprehensive simulation model to forecast the spread of COVID-19 across multiple countries using Markov Chains in Python. Collected real-world data from public health sources and applied probabilistic transition matrices to estimate daily infection progression.",
-      "detailedDescription": "This epidemiological modeling project aimed to create accurate predictions of COVID-19 spread patterns using advanced statistical methods. The project involved extensive data collection from multiple international health organizations, data cleaning and preprocessing, and the implementation of sophisticated Markov Chain models to simulate disease transmission dynamics across different geographical regions and time periods.",
-      "problemStatement": "During the early stages of the COVID-19 pandemic, there was an urgent need for accurate modeling tools to predict infection spread patterns. Traditional epidemiological models often failed to capture the complex, stochastic nature of disease transmission in real-world scenarios with varying intervention policies.",
-      "approach": "I developed a multi-state Markov Chain model where each state represented different infection stages (susceptible, exposed, infected, recovered). Transition probabilities were estimated from real-world data and updated dynamically. The model incorporated external factors like government interventions, population density, and seasonal variations to improve prediction accuracy.",
+      "title": "Character-Level Language Modeling Playground",
+      "description": "A hands-on project for experimenting with character-level language models in PyTorch. Implemented bigram probabilistic models, a single-layer neural network, and an MLP for next-character prediction to generate names from scratch without relying on high-level libraries.",
+      "detailedDescription": "This project is a practical exploration of character-level language modeling, inspired by Andrej Karpathy’s MakeMore series. The goal was to deepen understanding of neural networks and sequence modeling by coding models from scratch in PyTorch. The project progressed from simple bigram probability models to a single-layer neural network and then to an MLP that predicts the next character from a multi-character context. By generating names, visualizing learned weights, and experimenting with training loops, the project provided hands-on practice in low-level deep learning implementation.",
+      "problemStatement": "Understanding the inner workings of language models requires more than just using pre-trained architectures. Building models from scratch — including data preprocessing, manual forward and backward passes, and training loops — strengthens intuition for how sequence modeling and neural networks function at a fundamental level.",
+      "approach": "The project began with a bigram probabilistic model, counting character pairs and sampling from probability distributions. Next, a single-layer neural network was implemented to learn bigram relationships via gradient descent. Finally, an MLP model was built to use three-character context for predicting the next character, significantly improving generation quality. All models were trained and evaluated on a dataset of names.",
       "technologies": [
+        "PyTorch",
         "Python",
-        "Markov Chains",
-        "Matplotlib",
-        "Seaborn",
-        "Pandas",
         "NumPy",
-        "Public Health Data",
-        "Statistical Modeling"
+        "Matplotlib",
+        "Character-Level Language Models",
+        "Neural Networks"
       ],
       "image": "./assets/images/project-2.jpg",
-      "liveUrl": "https://covid-simulation-demo.netlify.app",
-      "githubUrl": "https://github.com/bhanuprakash-18/covid19-simulation",
-      "featured": true,
+      "liveUrl": null,
+      "githubUrl": "https://github.com/bhanuprakash-18/Character-Level-Language-Modeling-Playground",
+      "featured": false,
       "status": "completed",
-      "startDate": "2022-08-01",
-      "endDate": "2022-11-30",
+      "startDate": "2024-11-01",
+      "endDate": "2024-12-15",
       "highlights": [
-        "Developed probabilistic models using Markov Chains with 87% prediction accuracy",
-        "Analyzed infection dynamics across 15+ countries with real-time data integration",
-        "Created interactive visualizations showing peak infection periods and trends",
-        "Enabled scenario analysis for intervention strategies saving an estimated 10,000+ lives",
-        "Published methodology in peer-reviewed epidemiology journal"
+        "Implemented bigram probabilistic, bigram neural network, and MLP models from scratch in PyTorch",
+        "Practiced writing forward and backward passes manually for educational purposes",
+        "Generated realistic name samples by training on a dataset of thousands of names",
+        "Visualized learned weight matrices and probability distributions",
+        "Strengthened understanding of training loops, gradient descent, and loss functions"
       ],
       "codeExamples": [
         {
-          "title": "Markov Chain State Transitions",
-          "description": "Implementation of COVID-19 transmission model",
+          "title": "Manual Training Loop",
+          "description": "Basic gradient descent implementation for character-level models",
           "language": "python",
-          "snippet": "def transition_matrix(beta, gamma, population):\n    # S -> E -> I -> R model\n    transition_prob = np.zeros((4, 4))\n    transition_prob[0, 1] = beta  # S to E\n    transition_prob[1, 2] = 1/5.1  # E to I (5.1 day incubation)\n    transition_prob[2, 3] = gamma  # I to R\n    return transition_prob"
+          "snippet": "for k in range(20):\n    ypred = [n(x) for x in xs]\n    loss = sum((yout - ygt)**2 for (yout, ygt) in zip(ypred, ys))\n    for p in n.parameters():\n        p.grad = 0.0\n    loss.backward()\n    for p in n.parameters():\n        p.data += -0.05 * p.grad\n    print(k, loss.data)"
         }
       ]
     },
