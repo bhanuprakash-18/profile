@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Functionality Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        .flow-step {
+            background: #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4a90e2;
+        }
+        .expected {
+            color: #50e3c2;
+        }
+        .current {
+            color: #ffa500;
+        }
+        .button-preview {
+            background: linear-gradient(135deg, #4a90e2, #50e3c2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            margin: 5px;
+            display: inline-block;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔄 Toggle Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>Expected Flow for Both Sections (Projects & Blogs)</h2>
+        
+        <div class="flow-step">
+            <h3>Step 1: Initial State</h3>
+            <p class="expected">✅ Shows first 3 items</p>
+            <p class="expected">✅ Button text: <span class="button-preview">View 3 More Projects</span> or <span class="button-preview">View 3 More Blogs</span></p>
+        </div>
+        
+        <div class="flow-step">
+            <h3>Step 2: After Clicking "View More"</h3>
+            <p class="expected">✅ Shows all 6 items (3 initial + 3 more)</p>
+            <p class="expected">✅ Button changes to: <span class="button-preview">View Less Projects</span> or <span class="button-preview">View Less Blogs</span></p>
+            <p class="expected">✅ Arrow icon points up (↑)</p>
+        </div>
+        
+        <div class="flow-step">
+            <h3>Step 3: After Clicking "View Less"</h3>
+            <p class="expected">✅ Shows only first 3 items again</p>
+            <p class="expected">✅ Button changes back to: <span class="button-preview">View 3 More Projects</span> or <span class="button-preview">View 3 More Blogs</span></p>
+            <p class="expected">✅ Arrow icon points down (↓)</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Data Summary</h2>
+        <div id="data-summary" style="background: #333; padding: 15px; border-radius: 8px;">
+            Loading data...
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Testing Instructions</h2>
+        <ol>
+            <li>Open the main website: <a href="http://localhost:3000/index.html" target="_blank" style="color: #4a90e2;">http://localhost:3000/index.html</a></li>
+            <li>Scroll to the <strong>Projects</strong> section</li>
+            <li>Click "View 3 More Projects" → Should show all projects + "View Less Projects" button</li>
+            <li>Click "View Less Projects" → Should hide extra projects + show "View 3 More Projects" button</li>
+            <li>Scroll to the <strong>Blogs</strong> section</li>
+            <li>Click "View 3 More Blogs" → Should show all blogs + "View Less Blogs" button</li>
+            <li>Click "View Less Blogs" → Should hide extra blogs + show "View 3 More Blogs" button</li>
+        </ol>
+    </div>
+
+    <script>
+        async function loadTestData() {
+            try {
+                const [projectsResponse, blogsResponse] = await Promise.all([
+                    fetch('./data/projects.json'),
+                    fetch('./data/blogs.json')
+                ]);
+                
+                const projects = await projectsResponse.json();
+                const blogs = await blogsResponse.json();
+                
+                document.getElementById('data-summary').innerHTML = `
+                    <h3>Data Loaded Successfully!</h3>
+                    <p><strong>Projects:</strong> ${projects.length} total (3 initial + ${projects.length - 3} more)</p>
+                    <p><strong>Blogs:</strong> ${blogs.length} total (3 initial + ${blogs.length - 3} more)</p>
+                    <p><strong>Projects Button:</strong> "View ${projects.length - 3} More Project${projects.length - 3 > 1 ? 's' : ''}"</p>
+                    <p><strong>Blogs Button:</strong> "View ${blogs.length - 3} More Blog${blogs.length - 3 > 1 ? 's' : ''}"</p>
+                `;
+            } catch (error) {
+                document.getElementById('data-summary').innerHTML = `
+                    <p style="color: #ff6b6b;">❌ Error loading data: ${error.message}</p>
+                `;
+            }
+        }
+        
+        loadTestData();
+    </script>
+</body>
+</html>

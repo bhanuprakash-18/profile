@@ -15,7 +15,7 @@
         "Matplotlib",
         "Pandas"
       ],
-      "image": "./assets/images/project-3.jpg",
+      "image": "./assets/project_images/micrograd_banner.png",
       "liveUrl": null,
       "githubUrl": "https://github.com/bhanuprakash-18/micrograd",
       "featured": false,
@@ -53,7 +53,7 @@
         "Character-Level Language Models",
         "Neural Networks"
       ],
-      "image": "./assets/images/project-2.jpg",
+      "image": "./assets/project_images/makemore.png",
       "liveUrl": null,
       "githubUrl": "https://github.com/bhanuprakash-18/Character-Level-Language-Modeling-Playground",
       "featured": false,

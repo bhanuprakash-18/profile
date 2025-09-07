@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Toggle Functionality Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: white;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: #252525;
+        }
+        .fix-item {
+            background: #2a2a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #50e3c2;
+        }
+        .issue-item {
+            background: #3a2a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b6b;
+        }
+        .success {
+            color: #50e3c2;
+        }
+        .error {
+            color: #ff6b6b;
+        }
+        .warning {
+            color: #ffa500;
+        }
+        .code {
+            background: #1a1a1a;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Fixed Toggle Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>❌ Issues That Were Fixed</h2>
+        
+        <div class="issue-item">
+            <h3>1. Button Selector Conflict</h3>
+            <p><strong>Problem:</strong> Both Projects and Blogs sections used the same CSS class <span class="code">.btn-view-more-projects</span></p>
+            <p><strong>Impact:</strong> Clicking one button affected the other section</p>
+        </div>
+        
+        <div class="issue-item">
+            <h3>2. Multiple Buttons Visible</h3>
+            <p><strong>Problem:</strong> After expansion, both "View More" and "View Less" buttons were visible</p>
+            <p><strong>Impact:</strong> Confusing UI with duplicate buttons</p>
+        </div>
+        
+        <div class="issue-item">
+            <h3>3. Global Selectors</h3>
+            <p><strong>Problem:</strong> Functions used <span class="code">document.querySelector('.view-more-container')</span></p>
+            <p><strong>Impact:</strong> Selected elements from wrong sections</p>
+        </div>
+        
+        <div class="issue-item">
+            <h3>4. Button Positioning</h3>
+            <p><strong>Problem:</strong> "View Less" button not appearing after all items</p>
+            <p><strong>Impact:</strong> Poor user experience</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>✅ Fixes Applied</h2>
+        
+        <div class="fix-item">
+            <h3>1. Separate Button Classes</h3>
+            <p><span class="success">✅ Projects:</span> <span class="code">.btn-view-more-projects</span></p>
+            <p><span class="success">✅ Blogs:</span> <span class="code">.btn-view-more-blogs</span></p>
+            <p><strong>Result:</strong> No more cross-section interference</p>
+        </div>
+        
+        <div class="fix-item">
+            <h3>2. Section-Specific Selectors</h3>
+            <p><span class="success">✅ Projects:</span> <span class="code">elements.projectsGrid.querySelector('.view-more-container')</span></p>
+            <p><span class="success">✅ Blogs:</span> <span class="code">elements.blogsGrid.querySelector('.view-more-container')</span></p>
+            <p><strong>Result:</strong> Each section manages its own buttons</p>
+        </div>
+        
+        <div class="fix-item">
+            <h3>3. Proper Button Replacement</h3>
+            <p><span class="success">✅</span> Remove old button before adding new one</p>
+            <p><span class="success">✅</span> Proper timing with setTimeout</p>
+            <p><strong>Result:</strong> Only one button visible at a time</p>
+        </div>
+        
+        <div class="fix-item">
+            <h3>4. Enhanced CSS Styles</h3>
+            <p><span class="success">✅</span> Added complete CSS for <span class="code">.btn-view-more-blogs</span></p>
+            <p><span class="success">✅</span> Same animations and effects as projects</p>
+            <p><strong>Result:</strong> Consistent visual experience</p>
+        </div>
+        
+        <div class="fix-item">
+            <h3>5. Updated Enhanced Buttons Handler</h3>
+            <p><span class="success">✅</span> Added blog button class to event listeners</p>
+            <p><span class="success">✅</span> Both button types get enhanced interactions</p>
+            <p><strong>Result:</strong> Consistent button behavior</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 Testing Instructions</h2>
+        
+        <h3>Projects Section Test:</h3>
+        <ol>
+            <li>Go to <a href="http://localhost:3001/index.html#projects" target="_blank" style="color: #4a90e2;">Projects Section</a></li>
+            <li><span class="warning">Initial State:</span> Should show 3 projects + "View 3 More Projects" button</li>
+            <li><span class="warning">Click "View More":</span> Should show all 6 projects + "View Less Projects" button</li>
+            <li><span class="warning">Click "View Less":</span> Should show 3 projects + "View 3 More Projects" button</li>
+        </ol>
+        
+        <h3>Blogs Section Test:</h3>
+        <ol>
+            <li>Go to <a href="http://localhost:3001/index.html#blogs" target="_blank" style="color: #4a90e2;">Blogs Section</a></li>
+            <li><span class="warning">Initial State:</span> Should show 3 blogs + "View 3 More Blogs" button</li>
+            <li><span class="warning">Click "View More":</span> Should show all 6 blogs + "View Less Blogs" button</li>
+            <li><span class="warning">Click "View Less":</span> Should show 3 blogs + "View 3 More Blogs" button</li>
+        </ol>
+        
+        <h3>Cross-Section Test:</h3>
+        <ol>
+            <li><span class="warning">Test Independence:</span> Click projects "View More" → Blogs button should remain unchanged</li>
+            <li><span class="warning">Test Independence:</span> Click blogs "View More" → Projects button should remain unchanged</li>
+            <li><span class="warning">Test Simultaneous:</span> Both sections can be expanded independently</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Expected Flow</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="background: #2a2a2a; padding: 15px; border-radius: 8px;">
+                <h3>Projects Section</h3>
+                <p><strong>Step 1:</strong> 3 projects + "View 3 More Projects"</p>
+                <p><strong>Step 2:</strong> 6 projects + "View Less Projects"</p>
+                <p><strong>Step 3:</strong> 3 projects + "View 3 More Projects"</p>
+            </div>
+            
+            <div style="background: #2a2a2a; padding: 15px; border-radius: 8px;">
+                <h3>Blogs Section</h3>
+                <p><strong>Step 1:</strong> 3 blogs + "View 3 More Blogs"</p>
+                <p><strong>Step 2:</strong> 6 blogs + "View Less Blogs"</p>
+                <p><strong>Step 3:</strong> 3 blogs + "View 3 More Blogs"</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

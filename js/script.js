@@ -141,21 +141,19 @@ function toggleMobileMenu() {
  * @param {Event} event - Click event
  */
 function handleNavLinkClick(event) {
-    event.preventDefault();
-    
     const href = event.target.getAttribute('href');
     if (href && href.startsWith('#')) {
+        event.preventDefault();
         const targetId = href.substring(1);
         smoothScrollTo(targetId);
-        
         // Close mobile menu if open
         if (elements.navMenu.classList.contains('active')) {
             toggleMobileMenu();
         }
-        
         // Update active link
         updateActiveNavLink();
     }
+    // For external links, do nothing so browser opens them normally
 }
 
 /**
